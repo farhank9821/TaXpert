@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tax_xpert/pdf_extract.dart';
 
 import 'MainSection/Screens/entryScreen.dart';
 
@@ -11,6 +10,9 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(debugShowCheckedModeBanner: false, title: 'Flutter Demo', home: PdfTextExtractorPage());
+    return const MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Flutter Demo',
+    );
   }
 }

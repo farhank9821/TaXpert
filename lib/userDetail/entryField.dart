@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tax_xpert/MainSection/Screens/salaryNincome.dart';
+import 'package:tax_xpert/homeMainTry.dart';
+import 'package:tax_xpert/model/user_model.dart';
 import 'package:tax_xpert/userDetail/calculation.dart';
 
 class TaxDeductionForm extends ConsumerStatefulWidget {
@@ -13,6 +16,7 @@ class _TaxDeductionFormState extends ConsumerState<TaxDeductionForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   // Define controllers for each text field
   final TextEditingController _salaryIncomeController = TextEditingController();
+
   final TextEditingController _incomeFromInterestController = TextEditingController();
   final TextEditingController _rentalIncomeController = TextEditingController();
   final TextEditingController _incomeFromOtherSourcesController = TextEditingController();
@@ -39,6 +43,73 @@ class _TaxDeductionFormState extends ConsumerState<TaxDeductionForm> {
   final TextEditingController _savingsAccountInterestController = TextEditingController();
   final TextEditingController _depositsInterestController = TextEditingController();
   final TextEditingController _disabilityDeductionController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    final user = UserModel();
+    initializeControllers(user);
+  }
+
+  void initializeControllers(UserModel user) {
+    _salaryIncomeController.text = user.salary?.toString() ?? '';
+    _incomeFromInterestController.text = user.incomeFromInterest?.toString() ?? '';
+    _rentalIncomeController.text = user.rentalIncome?.toString() ?? '';
+    _incomeFromOtherSourcesController.text = user.incomeFromOtherSources?.toString() ?? '';
+
+    _lifeInsuranceController.text = user.lifeInsurance?.toString() ?? '';
+    _providentFundController.text = user.providentFund?.toString() ?? '';
+    _tuitionFeesController.text = user.tuitionFees?.toString() ?? '';
+    _annuitiesController.text = user.annuities?.toString() ?? '';
+    _pensionSchemeController.text = user.pensionScheme?.toString() ?? '';
+    _additionalPensionSchemeController.text = user.additionalPensionScheme?.toString() ?? '';
+    _employerPensionContributionController.text = user.employerPensionContribution?.toString() ?? '';
+    _agnipathContributionController.text = user.agnipathContribution?.toString() ?? '';
+    _healthInsuranceController.text = user.healthInsurance?.toString() ?? '';
+    _preventiveCheckupController.text = user.preventiveCheckup?.toString() ?? '';
+    _medicalTreatmentController.text = user.medicalTreatment?.toString() ?? '';
+    _educationLoanInterestController.text = user.educationLoanInterest?.toString() ?? '';
+    _homeLoanInterestController.text = user.homeLoanInterest?.toString() ?? '';
+    _firstTimeHomeBuyerInterestController.text = user.firstTimeHomeBuyerInterest?.toString() ?? '';
+    _electricVehicleLoanInterestController.text = user.electricVehicleLoanInterest?.toString() ?? '';
+    _donationsController.text = user.donations?.toString() ?? '';
+    _rentPaidController.text = user.rentPaid?.toString() ?? '';
+    _scientificResearchDonationsController.text = user.scientificResearchDonations?.toString() ?? '';
+    _politicalPartyDonationsController.text = user.politicalPartyDonations?.toString() ?? '';
+    _savingsAccountInterestController.text = user.savingsAccountInterest?.toString() ?? '';
+    _depositsInterestController.text = user.depositsInterest?.toString() ?? '';
+    _disabilityDeductionController.text = user.disabilityDeduction?.toString() ?? '';
+  }
+
+  void updateUserModel(UserModel user) {
+    user.salary = double.tryParse(_salaryIncomeController.text);
+    user.incomeFromInterest = double.tryParse(_incomeFromInterestController.text);
+    user.rentalIncome = double.tryParse(_rentalIncomeController.text);
+    user.incomeFromOtherSources = double.tryParse(_incomeFromOtherSourcesController.text);
+
+    user.lifeInsurance = double.tryParse(_lifeInsuranceController.text);
+    user.providentFund = double.tryParse(_providentFundController.text);
+    user.tuitionFees = double.tryParse(_tuitionFeesController.text);
+    user.annuities = double.tryParse(_annuitiesController.text);
+    user.pensionScheme = double.tryParse(_pensionSchemeController.text);
+    user.additionalPensionScheme = double.tryParse(_additionalPensionSchemeController.text);
+    user.employerPensionContribution = double.tryParse(_employerPensionContributionController.text);
+    user.agnipathContribution = double.tryParse(_agnipathContributionController.text);
+    user.healthInsurance = double.tryParse(_healthInsuranceController.text);
+    user.preventiveCheckup = double.tryParse(_preventiveCheckupController.text);
+    user.medicalTreatment = double.tryParse(_medicalTreatmentController.text);
+    user.educationLoanInterest = double.tryParse(_educationLoanInterestController.text);
+    user.homeLoanInterest = double.tryParse(_homeLoanInterestController.text);
+    user.firstTimeHomeBuyerInterest = double.tryParse(_firstTimeHomeBuyerInterestController.text);
+    user.electricVehicleLoanInterest = double.tryParse(_electricVehicleLoanInterestController.text);
+    user.donations = double.tryParse(_donationsController.text);
+    user.rentPaid = double.tryParse(_rentPaidController.text);
+    user.scientificResearchDonations = double.tryParse(_scientificResearchDonationsController.text);
+    user.politicalPartyDonations = double.tryParse(_politicalPartyDonationsController.text);
+    user.savingsAccountInterest = double.tryParse(_savingsAccountInterestController.text);
+    user.depositsInterest = double.tryParse(_depositsInterestController.text);
+    user.disabilityDeduction = double.tryParse(_disabilityDeductionController.text);
+  }
 
   @override
   void dispose() {
@@ -77,10 +148,6 @@ class _TaxDeductionFormState extends ConsumerState<TaxDeductionForm> {
 
   @override
   Widget build(BuildContext context) {
-    final calculationField = ref.read(calculationProvider);
-    calculationField.grossSalarySum(
-        _salaryIncomeController, _incomeFromInterestController, _rentalIncomeController, _incomeFromOtherSourcesController);
-
     return Scaffold(
       appBar: AppBar(title: const Text("Tax Deduction Form")),
       body: Padding(
@@ -345,6 +412,21 @@ class _TaxDeductionFormState extends ConsumerState<TaxDeductionForm> {
                   _disabilityDeductionController,
                 ],
               ),
+              ElevatedButton(
+                onPressed: () {
+                  if (_formKey.currentState?.validate() ?? false) {
+                    final user = UserModel();
+                    updateUserModel(user);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const HomeScreenTry(),
+                      ),
+                    );
+                  }
+                },
+                child: const Text('Submit'),
+              ),
             ],
           ),
         ),
@@ -393,6 +475,12 @@ class _TaxDeductionFormState extends ConsumerState<TaxDeductionForm> {
             labelText: fields[index],
           ),
           keyboardType: TextInputType.number,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Please enter your';
+            }
+            return null;
+          },
         );
       }),
     );

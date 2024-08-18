@@ -8,33 +8,33 @@ final userModelProvider = Provider<UserModel>((ref) {
 });
 
 class UserModel {
-  int? salary;
-  int? incomeFromInterest;
-  int? rentalIncome;
-  int? incomeFromOtherSources;
+  double? salary;
+  double? incomeFromInterest;
+  double? rentalIncome;
+  double? incomeFromOtherSources;
 
-  int? lifeInsurance;
-  int? providentFund;
-  int? tuitionFees;
-  int? annuities;
-  int? pensionScheme;
-  int? additionalPensionScheme;
-  int? employerPensionContribution;
-  int? agnipathContribution;
-  int? healthInsurance;
-  int? preventiveCheckup;
-  int? medicalTreatment;
-  int? educationLoanInterest;
-  int? homeLoanInterest;
-  int? firstTimeHomeBuyerInterest;
-  int? electricVehicleLoanInterest;
-  int? donations;
-  int? rentPaid;
-  int? scientificResearchDonations;
-  int? politicalPartyDonations;
-  int? savingsAccountInterest;
-  int? depositsInterest;
-  int? disabilityDeduction;
+  double? lifeInsurance;
+  double? providentFund;
+  double? tuitionFees;
+  double? annuities;
+  double? pensionScheme;
+  double? additionalPensionScheme;
+  double? employerPensionContribution;
+  double? agnipathContribution;
+  double? healthInsurance;
+  double? preventiveCheckup;
+  double? medicalTreatment;
+  double? educationLoanInterest;
+  double? homeLoanInterest;
+  double? firstTimeHomeBuyerInterest;
+  double? electricVehicleLoanInterest;
+  double? donations;
+  double? rentPaid;
+  double? scientificResearchDonations;
+  double? politicalPartyDonations;
+  double? savingsAccountInterest;
+  double? depositsInterest;
+  double? disabilityDeduction;
 
   UserModel({
     this.salary,
@@ -66,32 +66,32 @@ class UserModel {
   });
 
   UserModel copyWith({
-    int? salary,
-    int? incomeFromInterest,
-    int? rentalIncome,
-    int? incomeFromOtherSources,
-    int? lifeInsurance,
-    int? providentFund,
-    int? tuitionFees,
-    int? annuities,
-    int? pensionScheme,
-    int? additionalPensionScheme,
-    int? employerPensionContribution,
-    int? agnipathContribution,
-    int? healthInsurance,
-    int? preventiveCheckup,
-    int? medicalTreatment,
-    int? educationLoanInterest,
-    int? homeLoanInterest,
-    int? firstTimeHomeBuyerInterest,
-    int? electricVehicleLoanInterest,
-    int? donations,
-    int? rentPaid,
-    int? scientificResearchDonations,
-    int? politicalPartyDonations,
-    int? savingsAccountInterest,
-    int? depositsInterest,
-    int? disabilityDeduction,
+    double? salary,
+    double? incomeFromInterest,
+    double? rentalIncome,
+    double? incomeFromOtherSources,
+    double? lifeInsurance,
+    double? providentFund,
+    double? tuitionFees,
+    double? annuities,
+    double? pensionScheme,
+    double? additionalPensionScheme,
+    double? employerPensionContribution,
+    double? agnipathContribution,
+    double? healthInsurance,
+    double? preventiveCheckup,
+    double? medicalTreatment,
+    double? educationLoanInterest,
+    double? homeLoanInterest,
+    double? firstTimeHomeBuyerInterest,
+    double? electricVehicleLoanInterest,
+    double? donations,
+    double? rentPaid,
+    double? scientificResearchDonations,
+    double? politicalPartyDonations,
+    double? savingsAccountInterest,
+    double? depositsInterest,
+    double? disabilityDeduction,
   }) {
     return UserModel(
       salary: salary ?? this.salary,
@@ -156,32 +156,32 @@ class UserModel {
 
   factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel(
-      salary: map['salary'] != null ? map['salary'] as int : null,
-      incomeFromInterest: map['incomeFromInterest'] != null ? map['incomeFromInterest'] as int : null,
-      rentalIncome: map['rentalIncome'] != null ? map['rentalIncome'] as int : null,
-      incomeFromOtherSources: map['incomeFromOtherSources'] != null ? map['incomeFromOtherSources'] as int : null,
-      lifeInsurance: map['lifeInsurance'] != null ? map['lifeInsurance'] as int : null,
-      providentFund: map['providentFund'] != null ? map['providentFund'] as int : null,
-      tuitionFees: map['tuitionFees'] != null ? map['tuitionFees'] as int : null,
-      annuities: map['annuities'] != null ? map['annuities'] as int : null,
-      pensionScheme: map['pensionScheme'] != null ? map['pensionScheme'] as int : null,
-      additionalPensionScheme: map['additionalPensionScheme'] != null ? map['additionalPensionScheme'] as int : null,
-      employerPensionContribution: map['employerPensionContribution'] != null ? map['employerPensionContribution'] as int : null,
-      agnipathContribution: map['agnipathContribution'] != null ? map['agnipathContribution'] as int : null,
-      healthInsurance: map['healthInsurance'] != null ? map['healthInsurance'] as int : null,
-      preventiveCheckup: map['preventiveCheckup'] != null ? map['preventiveCheckup'] as int : null,
-      medicalTreatment: map['medicalTreatment'] != null ? map['medicalTreatment'] as int : null,
-      educationLoanInterest: map['educationLoanInterest'] != null ? map['educationLoanInterest'] as int : null,
-      homeLoanInterest: map['homeLoanInterest'] != null ? map['homeLoanInterest'] as int : null,
-      firstTimeHomeBuyerInterest: map['firstTimeHomeBuyerInterest'] != null ? map['firstTimeHomeBuyerInterest'] as int : null,
-      electricVehicleLoanInterest: map['electricVehicleLoanInterest'] != null ? map['electricVehicleLoanInterest'] as int : null,
-      donations: map['donations'] != null ? map['donations'] as int : null,
-      rentPaid: map['rentPaid'] != null ? map['rentPaid'] as int : null,
-      scientificResearchDonations: map['scientificResearchDonations'] != null ? map['scientificResearchDonations'] as int : null,
-      politicalPartyDonations: map['politicalPartyDonations'] != null ? map['politicalPartyDonations'] as int : null,
-      savingsAccountInterest: map['savingsAccountInterest'] != null ? map['savingsAccountInterest'] as int : null,
-      depositsInterest: map['depositsInterest'] != null ? map['depositsInterest'] as int : null,
-      disabilityDeduction: map['disabilityDeduction'] != null ? map['disabilityDeduction'] as int : null,
+      salary: map['salary']?.toDouble(),
+      incomeFromInterest: map['incomeFromInterest']?.toDouble(),
+      rentalIncome: map['rentalIncome']?.toDouble(),
+      incomeFromOtherSources: map['incomeFromOtherSources']?.toDouble(),
+      lifeInsurance: map['lifeInsurance']?.toDouble(),
+      providentFund: map['providentFund']?.toDouble(),
+      tuitionFees: map['tuitionFees']?.toDouble(),
+      annuities: map['annuities']?.toDouble(),
+      pensionScheme: map['pensionScheme']?.toDouble(),
+      additionalPensionScheme: map['additionalPensionScheme']?.toDouble(),
+      employerPensionContribution: map['employerPensionContribution']?.toDouble(),
+      agnipathContribution: map['agnipathContribution']?.toDouble(),
+      healthInsurance: map['healthInsurance']?.toDouble(),
+      preventiveCheckup: map['preventiveCheckup']?.toDouble(),
+      medicalTreatment: map['medicalTreatment']?.toDouble(),
+      educationLoanInterest: map['educationLoanInterest']?.toDouble(),
+      homeLoanInterest: map['homeLoanInterest']?.toDouble(),
+      firstTimeHomeBuyerInterest: map['firstTimeHomeBuyerInterest']?.toDouble(),
+      electricVehicleLoanInterest: map['electricVehicleLoanInterest']?.toDouble(),
+      donations: map['donations']?.toDouble(),
+      rentPaid: map['rentPaid']?.toDouble(),
+      scientificResearchDonations: map['scientificResearchDonations']?.toDouble(),
+      politicalPartyDonations: map['politicalPartyDonations']?.toDouble(),
+      savingsAccountInterest: map['savingsAccountInterest']?.toDouble(),
+      depositsInterest: map['depositsInterest']?.toDouble(),
+      disabilityDeduction: map['disabilityDeduction']?.toDouble(),
     );
   }
 

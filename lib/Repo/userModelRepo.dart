@@ -1,12 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tax_xpert/model/user_model.dart';
 
-final userModelProvider = StateNotifierProvider<UserModelNotifier, UserModel>((ref) {
-  return UserModelNotifier(UserModel());
-});
+final userProvider = StateNotifierProvider<UserNotifier, UserModel>((ref) => UserNotifier());
 
-class UserModelNotifier extends StateNotifier<UserModel> {
-  UserModelNotifier(super.state);
+class UserNotifier extends StateNotifier<UserModel> {
+  UserNotifier() : super(UserModel());
 
   void updateUser({
     double? salary,
@@ -37,32 +35,32 @@ class UserModelNotifier extends StateNotifier<UserModel> {
     double? disabilityDeduction,
   }) {
     state = state.copyWith(
-      salary: salary,
-      incomeFromInterest: incomeFromInterest,
-      rentalIncome: rentalIncome,
-      incomeFromOtherSources: incomeFromOtherSources,
-      lifeInsurance: lifeInsurance,
-      providentFund: providentFund,
-      tuitionFees: tuitionFees,
-      annuities: annuities,
-      pensionScheme: pensionScheme,
-      additionalPensionScheme: additionalPensionScheme,
-      employerPensionContribution: employerPensionContribution,
-      agnipathContribution: agnipathContribution,
-      healthInsurance: healthInsurance,
-      preventiveCheckup: preventiveCheckup,
-      medicalTreatment: medicalTreatment,
-      educationLoanInterest: educationLoanInterest,
-      homeLoanInterest: homeLoanInterest,
-      firstTimeHomeBuyerInterest: firstTimeHomeBuyerInterest,
-      electricVehicleLoanInterest: electricVehicleLoanInterest,
-      donations: donations,
-      rentPaid: rentPaid,
-      scientificResearchDonations: scientificResearchDonations,
-      politicalPartyDonations: politicalPartyDonations,
-      savingsAccountInterest: savingsAccountInterest,
-      depositsInterest: depositsInterest,
-      disabilityDeduction: disabilityDeduction,
+      salary: salary ?? state.salary,
+      incomeFromInterest: incomeFromInterest ?? state.incomeFromInterest,
+      rentalIncome: rentalIncome ?? state.rentalIncome,
+      incomeFromOtherSources: incomeFromOtherSources ?? state.incomeFromOtherSources,
+      lifeInsurance: lifeInsurance ?? state.lifeInsurance,
+      providentFund: providentFund ?? state.providentFund,
+      tuitionFees: tuitionFees ?? state.tuitionFees,
+      annuities: annuities ?? state.annuities,
+      pensionScheme: pensionScheme ?? state.pensionScheme,
+      additionalPensionScheme: additionalPensionScheme ?? state.additionalPensionScheme,
+      employerPensionContribution: employerPensionContribution ?? state.employerPensionContribution,
+      agnipathContribution: agnipathContribution ?? state.agnipathContribution,
+      healthInsurance: healthInsurance ?? state.healthInsurance,
+      preventiveCheckup: preventiveCheckup ?? state.preventiveCheckup,
+      medicalTreatment: medicalTreatment ?? state.medicalTreatment,
+      educationLoanInterest: educationLoanInterest ?? state.educationLoanInterest,
+      homeLoanInterest: homeLoanInterest ?? state.homeLoanInterest,
+      firstTimeHomeBuyerInterest: firstTimeHomeBuyerInterest ?? state.firstTimeHomeBuyerInterest,
+      electricVehicleLoanInterest: electricVehicleLoanInterest ?? state.electricVehicleLoanInterest,
+      donations: donations ?? state.donations,
+      rentPaid: rentPaid ?? state.rentPaid,
+      scientificResearchDonations: scientificResearchDonations ?? state.scientificResearchDonations,
+      politicalPartyDonations: politicalPartyDonations ?? state.politicalPartyDonations,
+      savingsAccountInterest: savingsAccountInterest ?? state.savingsAccountInterest,
+      depositsInterest: depositsInterest ?? state.depositsInterest,
+      disabilityDeduction: disabilityDeduction ?? state.disabilityDeduction,
     );
   }
 }

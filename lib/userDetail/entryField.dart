@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tax_xpert/Repo/UserCalculationRepo.dart';
 import 'package:tax_xpert/Repo/userModelRepo.dart';
 import 'package:tax_xpert/model/user_model.dart'; // Adjust import based on actual file location
 import 'package:tax_xpert/homeMainTry.dart'; // Adjust import based on actual file location
+import 'package:intl/intl.dart';
 
 class TaxDeductionForm extends ConsumerStatefulWidget {
   const TaxDeductionForm({super.key});
@@ -14,40 +17,34 @@ class TaxDeductionForm extends ConsumerStatefulWidget {
 class _TaxDeductionFormState extends ConsumerState<TaxDeductionForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  final TextEditingController _salaryIncomeController = TextEditingController();
-  final TextEditingController _incomeFromInterestController = TextEditingController();
-  final TextEditingController _rentalIncomeController = TextEditingController();
-  final TextEditingController _incomeFromOtherSourcesController = TextEditingController();
-  // Deduction Controllers
-  final TextEditingController _lifeInsuranceController = TextEditingController();
-  final TextEditingController _providentFundController = TextEditingController();
-  final TextEditingController _tuitionFeesController = TextEditingController();
-  final TextEditingController _annuitiesController = TextEditingController();
-  final TextEditingController _pensionSchemeController = TextEditingController();
-  final TextEditingController _additionalPensionSchemeController = TextEditingController();
-  final TextEditingController _employerPensionContributionController = TextEditingController();
-  final TextEditingController _agnipathContributionController = TextEditingController();
-  final TextEditingController _healthInsuranceController = TextEditingController();
-  final TextEditingController _preventiveCheckupController = TextEditingController();
-  final TextEditingController _medicalTreatmentController = TextEditingController();
-  final TextEditingController _educationLoanInterestController = TextEditingController();
-  final TextEditingController _homeLoanInterestController = TextEditingController();
-  final TextEditingController _firstTimeHomeBuyerInterestController = TextEditingController();
-  final TextEditingController _electricVehicleLoanInterestController = TextEditingController();
-  final TextEditingController _donationsController = TextEditingController();
-  final TextEditingController _rentPaidController = TextEditingController();
-  final TextEditingController _scientificResearchDonationsController = TextEditingController();
-  final TextEditingController _politicalPartyDonationsController = TextEditingController();
-  final TextEditingController _savingsAccountInterestController = TextEditingController();
-  final TextEditingController _depositsInterestController = TextEditingController();
-  final TextEditingController _disabilityDeductionController = TextEditingController();
+  final TextEditingController _salaryIncomeController = TextEditingController(text: "0");
+  final TextEditingController _incomeFromInterestController = TextEditingController(text: "0");
+  final TextEditingController _rentalIncomeController = TextEditingController(text: "0");
+  final TextEditingController _incomeFromOtherSourcesController = TextEditingController(text: "0");
 
-  @override
-  void initState() {
-    super.initState();
-    final user = ref.read(userModelProvider); // Fetch user from Riverpod provider or other source
-    initializeControllers(user);
-  }
+// Deduction Controllers
+  final TextEditingController _lifeInsuranceController = TextEditingController(text: "0");
+  final TextEditingController _providentFundController = TextEditingController(text: "0");
+  final TextEditingController _tuitionFeesController = TextEditingController(text: "0");
+  final TextEditingController _annuitiesController = TextEditingController(text: "0");
+  final TextEditingController _pensionSchemeController = TextEditingController(text: "0");
+  final TextEditingController _additionalPensionSchemeController = TextEditingController(text: "0");
+  final TextEditingController _employerPensionContributionController = TextEditingController(text: "0");
+  final TextEditingController _agnipathContributionController = TextEditingController(text: "0");
+  final TextEditingController _healthInsuranceController = TextEditingController(text: "0");
+  final TextEditingController _preventiveCheckupController = TextEditingController(text: "0");
+  final TextEditingController _medicalTreatmentController = TextEditingController(text: "0");
+  final TextEditingController _educationLoanInterestController = TextEditingController(text: "0");
+  final TextEditingController _homeLoanInterestController = TextEditingController(text: "0");
+  final TextEditingController _firstTimeHomeBuyerInterestController = TextEditingController(text: "0");
+  final TextEditingController _electricVehicleLoanInterestController = TextEditingController(text: "0");
+  final TextEditingController _donationsController = TextEditingController(text: "0");
+  final TextEditingController _rentPaidController = TextEditingController(text: "0");
+  final TextEditingController _scientificResearchDonationsController = TextEditingController(text: "0");
+  final TextEditingController _politicalPartyDonationsController = TextEditingController(text: "0");
+  final TextEditingController _savingsAccountInterestController = TextEditingController(text: "0");
+  final TextEditingController _depositsInterestController = TextEditingController(text: "0");
+  final TextEditingController _disabilityDeductionController = TextEditingController(text: "0");
 
   void initializeControllers(UserModel user) {
     _salaryIncomeController.text = user.salary?.toString() ?? '';
@@ -112,6 +109,8 @@ class _TaxDeductionFormState extends ConsumerState<TaxDeductionForm> {
 
   @override
   Widget build(BuildContext context) {
+    final user = ref.watch(userProvider);
+    final taxCalculation = ref.watch(taxCalculationProvider);
     return Scaffold(
       appBar: AppBar(title: const Text("Tax Deduction Form")),
       body: Padding(
@@ -120,10 +119,14 @@ class _TaxDeductionFormState extends ConsumerState<TaxDeductionForm> {
           key: _formKey,
           child: ListView(
             children: [
-              _buildTextField(_salaryIncomeController, "Gross Income From Salary"),
-              _buildTextField(_incomeFromInterestController, "Income From Interest"),
-              _buildTextField(_rentalIncomeController, "Rental Income Received"),
-              _buildTextField(_incomeFromOtherSourcesController, "Income From Other Sources"),
+              _buildTextField(_salaryIncomeController, "Gross Income From Salary",
+                  (value) => ref.read(userProvider.notifier).updateUser(salary: double.tryParse(value))),
+              _buildTextField(_incomeFromInterestController, "Income From Interest",
+                  (value) => ref.read(userProvider.notifier).updateUser(incomeFromInterest: double.tryParse(value))),
+              _buildTextField(_rentalIncomeController, "Rental Income Received",
+                  (value) => ref.read(userProvider.notifier).updateUser(rentalIncome: double.tryParse(value))),
+              _buildTextField(_incomeFromOtherSourcesController, "Income From Other Sources",
+                  (value) => ref.read(userProvider.notifier).updateUser(incomeFromOtherSources: double.tryParse(value))),
               const Text(
                 "Under Section 80C Deduction",
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
@@ -134,13 +137,19 @@ class _TaxDeductionFormState extends ConsumerState<TaxDeductionForm> {
                 "Deduction Limit: ₹ 1,50,000 under Section 80C",
                 ["Life Insurance Premium", "Provident Fund", "Tuition Fees"],
                 [_lifeInsuranceController, _providentFundController, _tuitionFeesController],
+                [
+                  (value) => ref.read(userProvider.notifier).updateUser(lifeInsurance: double.tryParse(value)),
+                  (value) => ref.read(userProvider.notifier).updateUser(providentFund: double.tryParse(value)),
+                  (value) => ref.read(userProvider.notifier).updateUser(tuitionFees: double.tryParse(value))
+                ],
               ),
               _buildSection(
                 context,
                 "Annuity Plan of LIC or Other Insurer - Section 80CCC",
-                "Deduction for annuity plans. It's like trading your money for a guaranteed income stream.",
+                "Deduction for annuity plans.",
                 ["Contribution to Annuity Plan"],
                 [_annuitiesController],
+                [(value) => ref.read(userProvider.notifier).updateUser(annuities: double.tryParse(value))],
               ),
               _buildSection(
                 context,
@@ -148,6 +157,7 @@ class _TaxDeductionFormState extends ConsumerState<TaxDeductionForm> {
                 "Contribution to NPS. Deduction Limit: ₹1,50,000",
                 ["Contribution to Pension Scheme"],
                 [_pensionSchemeController],
+                [(value) => ref.read(userProvider.notifier).updateUser(pensionScheme: double.tryParse(value))],
               ),
               _buildSection(
                 context,
@@ -155,6 +165,7 @@ class _TaxDeductionFormState extends ConsumerState<TaxDeductionForm> {
                 "Additional Contribution to NPS. Deduction Limit: ₹ 50,000",
                 ["Additional Contribution to Pension Scheme"],
                 [_additionalPensionSchemeController],
+                [(value) => ref.read(userProvider.notifier).updateUser(additionalPensionScheme: double.tryParse(value))],
               ),
               _buildSection(
                 context,
@@ -162,6 +173,7 @@ class _TaxDeductionFormState extends ConsumerState<TaxDeductionForm> {
                 "Employer Contribution to Pension Scheme. Deduction Limit: 10% or 14% of salary",
                 ["Employer Contribution to Pension Scheme"],
                 [_employerPensionContributionController],
+                [(value) => ref.read(userProvider.notifier).updateUser(employerPensionContribution: double.tryParse(value))],
               ),
               _buildSection(
                 context,
@@ -169,6 +181,7 @@ class _TaxDeductionFormState extends ConsumerState<TaxDeductionForm> {
                 "Contribution to Agnipath Scheme.",
                 ["Contribution to Agnipath Scheme"],
                 [_agnipathContributionController],
+                [(value) => ref.read(userProvider.notifier).updateUser(agnipathContribution: double.tryParse(value))],
               ),
               const Text(
                 "Under Section 80D Deduction",
@@ -180,6 +193,10 @@ class _TaxDeductionFormState extends ConsumerState<TaxDeductionForm> {
                 "Deduction for health insurance premiums paid for self, spouse, children, and parents.",
                 ["Health Insurance Premium", "Preventive Health Checkup"],
                 [_healthInsuranceController, _preventiveCheckupController],
+                [
+                  (value) => ref.read(userProvider.notifier).updateUser(healthInsurance: double.tryParse(value)),
+                  (value) => ref.read(userProvider.notifier).updateUser(preventiveCheckup: double.tryParse(value))
+                ],
               ),
               _buildSection(
                 context,
@@ -187,6 +204,7 @@ class _TaxDeductionFormState extends ConsumerState<TaxDeductionForm> {
                 "Deduction for medical treatment of specified diseases. Deduction Limit: ₹ 40,000 or ₹ 1,00,000 for senior citizens",
                 ["Medical Treatment"],
                 [_medicalTreatmentController],
+                [(value) => ref.read(userProvider.notifier).updateUser(medicalTreatment: double.tryParse(value))],
               ),
               _buildSection(
                 context,
@@ -194,6 +212,7 @@ class _TaxDeductionFormState extends ConsumerState<TaxDeductionForm> {
                 "Deduction for interest on education loan. No maximum limit on the amount.",
                 ["Education Loan Interest"],
                 [_educationLoanInterestController],
+                [(value) => ref.read(userProvider.notifier).updateUser(educationLoanInterest: double.tryParse(value))],
               ),
               _buildSection(
                 context,
@@ -201,6 +220,7 @@ class _TaxDeductionFormState extends ConsumerState<TaxDeductionForm> {
                 "Deduction for interest on home loan. Deduction Limit: ₹ 2,00,000",
                 ["Interest on Home Loan"],
                 [_homeLoanInterestController],
+                [(value) => ref.read(userProvider.notifier).updateUser(homeLoanInterest: double.tryParse(value))],
               ),
               _buildSection(
                 context,
@@ -208,6 +228,7 @@ class _TaxDeductionFormState extends ConsumerState<TaxDeductionForm> {
                 "Additional deduction for interest on home loan for first-time home buyers. Deduction Limit: ₹ 50,000",
                 ["Interest on Home Loan (First-Time Buyer)"],
                 [_firstTimeHomeBuyerInterestController],
+                [(value) => ref.read(userProvider.notifier).updateUser(firstTimeHomeBuyerInterest: double.tryParse(value))],
               ),
               _buildSection(
                 context,
@@ -215,6 +236,7 @@ class _TaxDeductionFormState extends ConsumerState<TaxDeductionForm> {
                 "Deduction for interest on loan for electric vehicle purchase. Deduction Limit: ₹ 1,50,000",
                 ["Interest on Electric Vehicle Loan"],
                 [_electricVehicleLoanInterestController],
+                [(value) => ref.read(userProvider.notifier).updateUser(electricVehicleLoanInterest: double.tryParse(value))],
               ),
               _buildSection(
                 context,
@@ -222,6 +244,7 @@ class _TaxDeductionFormState extends ConsumerState<TaxDeductionForm> {
                 "Deduction for donations to charitable institutions. Deduction limit varies based on the institution.",
                 ["Donations"],
                 [_donationsController],
+                [(value) => ref.read(userProvider.notifier).updateUser(donations: double.tryParse(value))],
               ),
               _buildSection(
                 context,
@@ -229,6 +252,7 @@ class _TaxDeductionFormState extends ConsumerState<TaxDeductionForm> {
                 "Deduction for rent paid by self-employed individuals. Deduction Limit: ₹ 5,000 per month",
                 ["Rent Paid"],
                 [_rentPaidController],
+                [(value) => ref.read(userProvider.notifier).updateUser(rentPaid: double.tryParse(value))],
               ),
               _buildSection(
                 context,
@@ -236,6 +260,7 @@ class _TaxDeductionFormState extends ConsumerState<TaxDeductionForm> {
                 "Deduction for donations to institutions engaged in scientific research.",
                 ["Scientific Research Donations"],
                 [_scientificResearchDonationsController],
+                [(value) => ref.read(userProvider.notifier).updateUser(scientificResearchDonations: double.tryParse(value))],
               ),
               _buildSection(
                 context,
@@ -243,6 +268,7 @@ class _TaxDeductionFormState extends ConsumerState<TaxDeductionForm> {
                 "Deduction for donations to political parties.",
                 ["Political Party Donations"],
                 [_politicalPartyDonationsController],
+                [(value) => ref.read(userProvider.notifier).updateUser(politicalPartyDonations: double.tryParse(value))],
               ),
               _buildSection(
                 context,
@@ -250,6 +276,7 @@ class _TaxDeductionFormState extends ConsumerState<TaxDeductionForm> {
                 "Deduction for interest earned on savings accounts. Deduction Limit: ₹ 10,000",
                 ["Interest on Savings Account"],
                 [_savingsAccountInterestController],
+                [(value) => ref.read(userProvider.notifier).updateUser(savingsAccountInterest: double.tryParse(value))],
               ),
               _buildSection(
                 context,
@@ -257,6 +284,7 @@ class _TaxDeductionFormState extends ConsumerState<TaxDeductionForm> {
                 "Deduction for interest earned on deposits for senior citizens. Deduction Limit: ₹ 50,000",
                 ["Interest on Deposits"],
                 [_depositsInterestController],
+                [(value) => ref.read(userProvider.notifier).updateUser(depositsInterest: double.tryParse(value))],
               ),
               _buildSection(
                 context,
@@ -264,6 +292,7 @@ class _TaxDeductionFormState extends ConsumerState<TaxDeductionForm> {
                 "Deduction for individuals with disabilities. Deduction Limit: ₹ 75,000 or ₹ 1,25,000 for severe disability.",
                 ["Disability Deduction"],
                 [_disabilityDeductionController],
+                [(value) => ref.read(userProvider.notifier).updateUser(disabilityDeduction: double.tryParse(value))],
               ),
               const SizedBox(height: 20),
               ElevatedButton(
@@ -277,19 +306,43 @@ class _TaxDeductionFormState extends ConsumerState<TaxDeductionForm> {
     );
   }
 
-  Widget _buildTextField(TextEditingController controller, String label) {
+  Widget _buildTextField(TextEditingController controller, String label, Function(String) onChange) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: TextFormField(
         controller: controller,
+        onChanged: (value) {
+          // Remove commas and convert empty string to '0'
+          String parsedValue = value.replaceAll(',', '');
+          parsedValue = parsedValue.isEmpty ? '0' : parsedValue;
+
+          // Update the controller with formatted value
+          double? numericValue = double.tryParse(parsedValue);
+          if (numericValue != null) {
+            String formattedValue = NumberFormat('#,##0').format(numericValue);
+            controller.value = TextEditingValue(
+              text: formattedValue,
+              selection: TextSelection.collapsed(offset: formattedValue.length),
+            );
+          }
+
+          // Call the onChange function with the parsed value
+          onChange(parsedValue);
+
+          // Recalculate tax
+          ref.read(taxCalculationProvider.notifier).calculateTax(ref.read(userProvider));
+        },
         decoration: InputDecoration(
           labelText: label,
           border: const OutlineInputBorder(),
         ),
         keyboardType: TextInputType.number,
+        inputFormatters: [
+          FilteringTextInputFormatter.allow(RegExp(r'[0-9,]')),
+        ],
         validator: (value) {
           if (value == null || value.isEmpty) {
-            return 'Please enter a value';
+            return 'Please enter a number';
           }
           return null;
         },
@@ -297,7 +350,8 @@ class _TaxDeductionFormState extends ConsumerState<TaxDeductionForm> {
     );
   }
 
-  Widget _buildSection(BuildContext context, String title, String description, List<String> labels, List<TextEditingController> controllers) {
+  Widget _buildSection(BuildContext context, String title, String description, List<String> labels, List<TextEditingController> controllers,
+      List<Function(String)> onChangeFunctions) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Column(
@@ -312,7 +366,7 @@ class _TaxDeductionFormState extends ConsumerState<TaxDeductionForm> {
             style: Theme.of(context).textTheme.titleMedium,
           ),
           ...List.generate(labels.length, (index) {
-            return _buildTextField(controllers[index], labels[index]);
+            return _buildTextField(controllers[index], labels[index], onChangeFunctions[index]);
           }),
         ],
       ),
@@ -321,7 +375,8 @@ class _TaxDeductionFormState extends ConsumerState<TaxDeductionForm> {
 
   void _handleSubmit() {
     if (_formKey.currentState?.validate() ?? false) {
-      final user = ref.read(userModelProvider.notifier); // Access the user model's notifier
+      final user = ref.read(userProvider.notifier);
+      final taxCalculator = ref.read(taxCalculationProvider.notifier);
 
       // Update user model with form data using copyWith
       user.updateUser(
@@ -352,6 +407,7 @@ class _TaxDeductionFormState extends ConsumerState<TaxDeductionForm> {
         depositsInterest: double.tryParse(_depositsInterestController.text),
         disabilityDeduction: double.tryParse(_disabilityDeductionController.text),
       );
+      taxCalculator.calculateTax(ref.read(userProvider));
 
       // Navigate to the next screen or show a confirmation
       Navigator.pushReplacement(
@@ -359,5 +415,27 @@ class _TaxDeductionFormState extends ConsumerState<TaxDeductionForm> {
         MaterialPageRoute(builder: (context) => const HomeScreenTry()), // Adjust based on actual target screen
       );
     }
+  }
+}
+
+class NumberInputFormatter extends TextInputFormatter {
+  final NumberFormat numberFormat = NumberFormat("#,##0");
+
+  @override
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+    if (newValue.text.isEmpty || double.tryParse(newValue.text.replaceAll(',', '')) == null) {
+      return oldValue;
+    }
+
+    double value = double.parse(newValue.text.replaceAll(',', ''));
+
+    String formattedValue = numberFormat.format(value);
+
+    int cursorPosition = formattedValue.length - (newValue.text.length - newValue.selection.baseOffset);
+
+    return TextEditingValue(
+      text: formattedValue,
+      selection: TextSelection.collapsed(offset: cursorPosition),
+    );
   }
 }

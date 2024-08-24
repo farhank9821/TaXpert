@@ -53,6 +53,7 @@ dependencies:
   flutter_riverpod: ^2.5.1
   hive: ^2.2.3
   intl: ^0.17.0
+  tab_container: ^3.5.3
 
 dev_dependencies:
   flutter_test:

@@ -1,15 +1,10 @@
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:tax_xpert/Chart_Section/charts.dart';
 import 'package:tax_xpert/Repo/UserCalculationRepo.dart';
-import 'package:tax_xpert/Repo/charts_provider.dart';
 import 'package:tax_xpert/Repo/userModelRepo.dart';
-import 'package:tax_xpert/model/userCalculationModel.dart';
 import 'package:tax_xpert/model/user_model.dart';
-import 'package:tax_xpert/utils/buildInTextField.dart';
 
 class HomeScreenTry extends ConsumerStatefulWidget {
   const HomeScreenTry({super.key});
@@ -48,6 +43,45 @@ class _HomeScreenTryState extends ConsumerState<HomeScreenTry> {
   final TextEditingController _savingsAccountInterestController = TextEditingController();
   final TextEditingController _depositsInterestController = TextEditingController();
   final TextEditingController _disabilityDeductionController = TextEditingController();
+
+  String formatDoubleToCurrency(double number) {
+    NumberFormat formatter = NumberFormat("#,##,##0", "en_IN");
+    return formatter.format(number);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    final val = ref.read(userProvider);
+
+    _salaryIncomeController.text = formatDoubleToCurrency(val.salary ?? 0.0);
+    _incomeFromInterestController.text = formatDoubleToCurrency(val.incomeFromInterest ?? 0.0);
+    _rentalIncomeController.text = formatDoubleToCurrency(val.rentalIncome ?? 0.0);
+    _incomeFromOtherSourcesController.text = formatDoubleToCurrency(val.incomeFromOtherSources ?? 0.0);
+
+    _lifeInsuranceController.text = formatDoubleToCurrency(val.lifeInsurance ?? 0.0);
+    _providentFundController.text = formatDoubleToCurrency(val.providentFund ?? 0.0);
+    _tuitionFeesController.text = formatDoubleToCurrency(val.tuitionFees ?? 0.0);
+    _annuitiesController.text = formatDoubleToCurrency(val.annuities ?? 0.0);
+    _pensionSchemeController.text = formatDoubleToCurrency(val.pensionScheme ?? 0.0);
+    _additionalPensionSchemeController.text = formatDoubleToCurrency(val.additionalPensionScheme ?? 0.0);
+    _employerPensionContributionController.text = formatDoubleToCurrency(val.employerPensionContribution ?? 0.0);
+    _agnipathContributionController.text = formatDoubleToCurrency(val.agnipathContribution ?? 0.0);
+    _healthInsuranceController.text = formatDoubleToCurrency(val.healthInsurance ?? 0.0);
+    _preventiveCheckupController.text = formatDoubleToCurrency(val.preventiveCheckup ?? 0.0);
+    _medicalTreatmentController.text = formatDoubleToCurrency(val.medicalTreatment ?? 0.0);
+    _educationLoanInterestController.text = formatDoubleToCurrency(val.educationLoanInterest ?? 0.0);
+    _homeLoanInterestController.text = formatDoubleToCurrency(val.homeLoanInterest ?? 0.0);
+    _firstTimeHomeBuyerInterestController.text = formatDoubleToCurrency(val.firstTimeHomeBuyerInterest ?? 0.0);
+    _electricVehicleLoanInterestController.text = formatDoubleToCurrency(val.electricVehicleLoanInterest ?? 0.0);
+    _donationsController.text = formatDoubleToCurrency(val.donations ?? 0.0);
+    _rentPaidController.text = formatDoubleToCurrency(val.rentPaid ?? 0.0);
+    _scientificResearchDonationsController.text = formatDoubleToCurrency(val.scientificResearchDonations ?? 0.0);
+    _politicalPartyDonationsController.text = formatDoubleToCurrency(val.politicalPartyDonations ?? 0.0);
+    _savingsAccountInterestController.text = formatDoubleToCurrency(val.savingsAccountInterest ?? 0.0);
+    _depositsInterestController.text = formatDoubleToCurrency(val.depositsInterest ?? 0.0);
+    _disabilityDeductionController.text = formatDoubleToCurrency(val.disabilityDeduction ?? 0.0);
+  }
 
   @override
   void dispose() {

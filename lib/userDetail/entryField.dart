@@ -109,8 +109,8 @@ class _TaxDeductionFormState extends ConsumerState<TaxDeductionForm> {
 
   @override
   Widget build(BuildContext context) {
-    final user = ref.watch(userProvider);
-    final taxCalculation = ref.watch(taxCalculationProvider);
+    ref.watch(userProvider);
+    ref.watch(taxCalculationProvider);
     return Scaffold(
       appBar: AppBar(title: const Text("Tax Deduction Form")),
       body: Padding(
@@ -312,11 +312,9 @@ class _TaxDeductionFormState extends ConsumerState<TaxDeductionForm> {
       child: TextFormField(
         controller: controller,
         onChanged: (value) {
-          // Remove commas and convert empty string to '0'
           String parsedValue = value.replaceAll(',', '');
           parsedValue = parsedValue.isEmpty ? '0' : parsedValue;
 
-          // Update the controller with formatted value
           double? numericValue = double.tryParse(parsedValue);
           if (numericValue != null) {
             String formattedValue = NumberFormat('#,##0').format(numericValue);
@@ -326,10 +324,8 @@ class _TaxDeductionFormState extends ConsumerState<TaxDeductionForm> {
             );
           }
 
-          // Call the onChange function with the parsed value
           onChange(parsedValue);
 
-          // Recalculate tax
           ref.read(taxCalculationProvider.notifier).calculateTax(ref.read(userProvider));
         },
         decoration: InputDecoration(
@@ -350,25 +346,50 @@ class _TaxDeductionFormState extends ConsumerState<TaxDeductionForm> {
     );
   }
 
-  Widget _buildSection(BuildContext context, String title, String description, List<String> labels, List<TextEditingController> controllers,
-      List<Function(String)> onChangeFunctions) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+  Widget _buildSection(
+    BuildContext context,
+    String title,
+    String description,
+    List<String> labels,
+    List<TextEditingController> controllers,
+    List<void Function(String)> onChangeFunctions,
+  ) {
+    return ExpansionTile(
+      title: Row(
         children: [
-          Text(
-            title,
-            style: Theme.of(context).textTheme.titleLarge,
+          Expanded(child: Text(title)),
+          IconButton(
+            icon: const Icon(Icons.info_outline),
+            tooltip: description,
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text(title),
+                    content: Text(description),
+                    actions: [
+                      TextButton(
+                        child: const Text("Close"),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
           ),
-          Text(
-            description,
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
-          ...List.generate(labels.length, (index) {
-            return _buildTextField(controllers[index], labels[index], onChangeFunctions[index]);
-          }),
         ],
+      ),
+      children: List.generate(
+        labels.length,
+        (index) => _buildTextField(
+          controllers[index],
+          labels[index],
+          onChangeFunctions[index],
+        ),
       ),
     );
   }

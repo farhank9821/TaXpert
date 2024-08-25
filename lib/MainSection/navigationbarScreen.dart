@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:tax_xpert/Home_Screen/home.dart';
 import 'package:tax_xpert/MainSection/Screens/calculator.dart';
 import 'package:tax_xpert/MainSection/Screens/HomeScreen.dart';
 import 'package:tax_xpert/MainSection/Screens/insights.dart';
@@ -18,7 +19,7 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
   int currentTab = 0;
 
   final List<Widget> screens = [
-    const DashboardScreen(),
+    const HomeScreen(),
     const CalculatorScreen(),
     NewsScreen(),
     const ProfileScreen(),

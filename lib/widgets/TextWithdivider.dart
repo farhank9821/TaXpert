@@ -8,13 +8,13 @@ class TextWithdivider extends StatefulWidget {
   final bool showIncome; // New field to enable/disable Divider
 
   const TextWithdivider({
-    Key? key, // Don't forget to include the key parameter
+    super.key, // Don't forget to include the key parameter
     required this.label,
     required this.value,
     required this.income,
     this.showDivider = true,
     this.showIncome = false,
-  }) : super(key: key);
+  });
 
   @override
   State<TextWithdivider> createState() => _TextWithdividerState();

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tax_xpert/MainSection/navigationbarScreen.dart';
 import 'package:tax_xpert/Repo/UserCalculationRepo.dart';
 import 'package:tax_xpert/Repo/userModelRepo.dart';
 import 'package:tax_xpert/model/user_model.dart'; // Adjust import based on actual file location
-import 'package:tax_xpert/homeMainTry.dart'; // Adjust import based on actual file location
+import 'package:tax_xpert/Home_Screen/home.dart'; // Adjust import based on actual file location
 import 'package:intl/intl.dart';
+import 'package:tax_xpert/utils/theme.dart';
 
 class TaxDeductionForm extends ConsumerStatefulWidget {
   const TaxDeductionForm({super.key});
@@ -296,8 +298,11 @@ class _TaxDeductionFormState extends ConsumerState<TaxDeductionForm> {
               ),
               const SizedBox(height: 20),
               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(context).colorScheme.primary, // Change this to your desired color
+                ),
                 onPressed: _handleSubmit,
-                child: const Text("Submit"),
+                child: Text("Submit", style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Theme.of(context).colorScheme.surface)),
               ),
             ],
           ),
@@ -307,6 +312,7 @@ class _TaxDeductionFormState extends ConsumerState<TaxDeductionForm> {
   }
 
   Widget _buildTextField(TextEditingController controller, String label, Function(String) onChange) {
+    var theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: TextFormField(
@@ -317,7 +323,7 @@ class _TaxDeductionFormState extends ConsumerState<TaxDeductionForm> {
 
           double? numericValue = double.tryParse(parsedValue);
           if (numericValue != null) {
-            String formattedValue = NumberFormat('#,##0').format(numericValue);
+            String formattedValue = NumberFormat('#,##,##0').format(numericValue);
             controller.value = TextEditingValue(
               text: formattedValue,
               selection: TextSelection.collapsed(offset: formattedValue.length),
@@ -330,8 +336,22 @@ class _TaxDeductionFormState extends ConsumerState<TaxDeductionForm> {
         },
         decoration: InputDecoration(
           labelText: label,
-          border: const OutlineInputBorder(),
+          labelStyle: theme.textTheme.titleSmall!.copyWith(color: theme.colorScheme.primary),
+          filled: true,
+          fillColor: Colors.transparent,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12.0),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12.0),
+            borderSide: BorderSide(color: theme.colorScheme.primaryContainer, width: 2.0),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12.0),
+            borderSide: const BorderSide(color: Colors.grey, width: 1.0),
+          ),
         ),
+        style: theme.textTheme.bodyMedium,
         keyboardType: TextInputType.number,
         inputFormatters: [
           FilteringTextInputFormatter.allow(RegExp(r'[0-9,]')),
@@ -354,20 +374,45 @@ class _TaxDeductionFormState extends ConsumerState<TaxDeductionForm> {
     List<TextEditingController> controllers,
     List<void Function(String)> onChangeFunctions,
   ) {
+    var theme = Theme.of(context);
     return ExpansionTile(
       title: Row(
         children: [
-          Expanded(child: Text(title)),
+          Expanded(
+              child: Text(
+            title,
+            style: theme.textTheme.bodyLarge,
+          )),
           IconButton(
+            color: theme.colorScheme.onPrimary,
             icon: const Icon(Icons.info_outline),
             tooltip: description,
             onPressed: () {
               showDialog(
+                barrierDismissible: true,
+                barrierColor: theme.colorScheme.surface.withOpacity(0.8),
                 context: context,
-                builder: (BuildContext context) {
+                builder: (context) {
                   return AlertDialog(
-                    title: Text(title),
-                    content: Text(description),
+                    elevation: 10,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    backgroundColor: theme.colorScheme.onSecondary,
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          title,
+                          style: theme.textTheme.bodyLarge!.copyWith(color: theme.colorScheme.surface),
+                        ),
+                        const SizedBox(height: 16), // Add some spacing
+                        Text(
+                          description,
+                          style: theme.textTheme.displaySmall!.copyWith(color: theme.colorScheme.primary, fontSize: 18),
+                        ),
+                      ],
+                    ),
                     actions: [
                       TextButton(
                         child: const Text("Close"),
@@ -376,6 +421,7 @@ class _TaxDeductionFormState extends ConsumerState<TaxDeductionForm> {
                         },
                       ),
                     ],
+                    // Add a blur effect when clicking the background
                   );
                 },
               );
@@ -433,7 +479,7 @@ class _TaxDeductionFormState extends ConsumerState<TaxDeductionForm> {
       // Navigate to the next screen or show a confirmation
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const HomeScreenTry()), // Adjust based on actual target screen
+        MaterialPageRoute(builder: (context) => const BottomNavigationScreen()), // Adjust based on actual target screen
       );
     }
   }

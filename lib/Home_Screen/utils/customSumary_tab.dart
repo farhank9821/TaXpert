@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
+import 'package:hive/hive.dart';
 import 'package:tax_xpert/Home_Screen/regime/new_regime.dart';
 import 'package:tax_xpert/Home_Screen/regime/old_regime.dart';
 import 'package:tax_xpert/Repo/UserCalculationRepo.dart';
@@ -35,32 +34,37 @@ class _HomeSummaryState extends ConsumerState<HomeSummary> with SingleTickerProv
       children: [
         Container(
           decoration: BoxDecoration(
-            color: theme.colorScheme.onPrimary,
+            color: theme.colorScheme.primary,
             borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(15.0),
               topRight: Radius.circular(15.0),
             ),
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TabBar(
-              controller: _tabController,
-              indicator: BoxDecoration(
-                borderRadius: BorderRadius.circular(50),
-                color: Colors.blue,
+          child: TabBar(
+            controller: _tabController,
+            indicator: BoxDecoration(
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(15.0),
+                  topRight: Radius.circular(15.0),
+                ),
+                color: theme.colorScheme.onTertiary,
+                shape: BoxShape.rectangle),
+            labelColor: Colors.white,
+            unselectedLabelColor: Colors.black,
+            tabs: const [
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 1),
+                child: Tab(text: 'New Regime'),
               ),
-              labelColor: Colors.white,
-              unselectedLabelColor: Colors.black,
-              tabs: const [
-                Tab(text: 'New Regime'),
-                Tab(text: 'Old Regime'),
-              ],
-            ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 1),
+                child: Tab(text: 'Old Regime'),
+              ),
+            ],
           ),
         ),
-        Container(
-          height: 400,
-          color: theme.colorScheme.primary,
+        SizedBox(
+          height: MediaQuery.of(context).size.height * 0.45,
           child: TabBarView(
             controller: _tabController,
             children: const [NewRegime(), OldRegime()],

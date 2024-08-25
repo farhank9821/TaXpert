@@ -127,44 +127,21 @@ class _CustomTabScreenState extends ConsumerState<CustomTabScreen> with SingleTi
     });
     return Column(
       children: [
-        Container(
-          decoration: const BoxDecoration(
-            color: Colors.green,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(15.0),
-              topRight: Radius.circular(15.0),
-            ),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TabBar(
-              controller: _tabController,
-              indicator: BoxDecoration(
-                borderRadius: BorderRadius.circular(50),
-                color: Colors.blue,
-              ),
-              labelColor: Colors.white,
-              unselectedLabelColor: Colors.black,
-              tabs: const [
-                Tab(text: 'Basic Salary'),
-                Tab(text: '80C'),
-                Tab(text: '80D'),
-                Tab(text: "TDS"),
-              ],
-            ),
-          ),
+        _buildIncomeSection(context),
+        const SizedBox(
+          height: 10,
         ),
-        SizedBox(
-          height: 400, // Fixed height for the tab content
-          child: TabBarView(
-            controller: _tabController,
-            children: [
-              _buildIncomeSection(context),
-              _build80CSection(context),
-              _build80DSection(context),
-              _buildSettingsSection(context),
-            ],
-          ),
+        _build80CSection(context),
+        const SizedBox(
+          height: 10,
+        ),
+        _build80DSection(context),
+        const SizedBox(
+          height: 10,
+        ),
+        _buildSettingsSection(context),
+        const SizedBox(
+          height: 10,
         ),
       ],
     );
@@ -177,245 +154,202 @@ class _CustomTabScreenState extends ConsumerState<CustomTabScreen> with SingleTi
    */
 
   Widget _buildIncomeSection(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      /*
-          ------- Basic Salary------------ 
-          */
-      children: [
-        Text('Basic Salary', style: Theme.of(context).textTheme.headlineSmall),
-        Expanded(
-          child: Form(
-              key: _incomeFormKey,
-              child: ListView(
-                children: [
-                  _buildTextField(_salaryIncomeController, "Gross Income From Salary",
-                      (value) => ref.read(userProvider.notifier).updateUser(salary: double.tryParse(value))),
-                  _buildTextField(
-                    _incomeFromInterestController,
-                    "Income From Interest",
-                    (value) => ref.read(userProvider.notifier).updateUser(
-                          incomeFromInterest: double.tryParse(value),
-                        ),
-                  ),
-                  _buildTextField(_rentalIncomeController, "Rental Income Received",
-                      (value) => ref.read(userProvider.notifier).updateUser(rentalIncome: double.tryParse(value))),
-                  _buildTextField(_incomeFromOtherSourcesController, "Income From Other Sources",
-                      (value) => ref.read(userProvider.notifier).updateUser(incomeFromOtherSources: double.tryParse(value))),
-                ],
-              )),
-        )
-      ],
-    );
+    return ExpansionTile(title: Text('Basic Salary', style: Theme.of(context).textTheme.headlineSmall), children: [
+      _buildTextField(
+          _salaryIncomeController, "Gross Income From Salary", (value) => ref.read(userProvider.notifier).updateUser(salary: double.tryParse(value))),
+      _buildTextField(
+        _incomeFromInterestController,
+        "Income From Interest",
+        (value) => ref.read(userProvider.notifier).updateUser(
+              incomeFromInterest: double.tryParse(value),
+            ),
+      ),
+      _buildTextField(_rentalIncomeController, "Rental Income Received",
+          (value) => ref.read(userProvider.notifier).updateUser(rentalIncome: double.tryParse(value))),
+      _buildTextField(_incomeFromOtherSourcesController, "Income From Other Sources",
+          (value) => ref.read(userProvider.notifier).updateUser(incomeFromOtherSources: double.tryParse(value))),
+    ]);
   }
 
   Widget _build80CSection(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return ExpansionTile(
+      title: Text('80-C', style: Theme.of(context).textTheme.headlineSmall),
       children: [
-        Text('80-C', style: Theme.of(context).textTheme.headlineSmall),
-        Expanded(
-          child: Form(
-              key: _80CFormKey,
-              child: ListView(
-                children: [
-                  _buildSection(
-                    context,
-                    "Life Insurance Premium, Provident Fund, Tuition Fees - 80C",
-                    "Deduction Limit: ₹ 1,50,000 under Section 80C",
-                    ["Life Insurance Premium", "Provident Fund", "Tuition Fees"],
-                    [_lifeInsuranceController, _providentFundController, _tuitionFeesController],
-                    [
-                      (value) => ref.read(userProvider.notifier).updateUser(lifeInsurance: double.tryParse(value)),
-                      (value) => ref.read(userProvider.notifier).updateUser(providentFund: double.tryParse(value)),
-                      (value) => ref.read(userProvider.notifier).updateUser(tuitionFees: double.tryParse(value))
-                    ],
-                  ),
-                  _buildSection(
-                    context,
-                    "Annuity Plan of LIC or Other Insurer - Section 80CCC",
-                    "Deduction for annuity plans.",
-                    ["Contribution to Annuity Plan"],
-                    [_annuitiesController],
-                    [(value) => ref.read(userProvider.notifier).updateUser(annuities: double.tryParse(value))],
-                  ),
-                  _buildSection(
-                    context,
-                    "Pension Scheme of Central Government - Section 80CCD(1)",
-                    "Contribution to NPS. Deduction Limit: ₹1,50,000",
-                    ["Contribution to Pension Scheme"],
-                    [_pensionSchemeController],
-                    [(value) => ref.read(userProvider.notifier).updateUser(pensionScheme: double.tryParse(value))],
-                  ),
-                  _buildSection(
-                    context,
-                    "Section 80CCD(1B)",
-                    "Additional Contribution to NPS. Deduction Limit: ₹ 50,000",
-                    ["Additional Contribution to Pension Scheme"],
-                    [_additionalPensionSchemeController],
-                    [(value) => ref.read(userProvider.notifier).updateUser(additionalPensionScheme: double.tryParse(value))],
-                  ),
-                  _buildSection(
-                    context,
-                    "Section 80CCD(2)",
-                    "Employer Contribution to Pension Scheme. Deduction Limit: 10% or 14% of salary",
-                    ["Employer Contribution to Pension Scheme"],
-                    [_employerPensionContributionController],
-                    [(value) => ref.read(userProvider.notifier).updateUser(employerPensionContribution: double.tryParse(value))],
-                  ),
-                  _buildSection(
-                    context,
-                    "Section 80CCH",
-                    "Contribution to Agnipath Scheme.",
-                    ["Contribution to Agnipath Scheme"],
-                    [_agnipathContributionController],
-                    [(value) => ref.read(userProvider.notifier).updateUser(agnipathContribution: double.tryParse(value))],
-                  ),
-                ],
-              )),
-        )
+        _buildSection(
+          context,
+          "Life Insurance Premium, Provident Fund, Tuition Fees - 80C",
+          "Deduction Limit: ₹ 1,50,000 under Section 80C",
+          ["Life Insurance Premium", "Provident Fund", "Tuition Fees"],
+          [_lifeInsuranceController, _providentFundController, _tuitionFeesController],
+          [
+            (value) => ref.read(userProvider.notifier).updateUser(lifeInsurance: double.tryParse(value)),
+            (value) => ref.read(userProvider.notifier).updateUser(providentFund: double.tryParse(value)),
+            (value) => ref.read(userProvider.notifier).updateUser(tuitionFees: double.tryParse(value))
+          ],
+        ),
+        _buildSection(
+          context,
+          "Annuity Plan of LIC or Other Insurer - Section 80CCC",
+          "Deduction for annuity plans.",
+          ["Contribution to Annuity Plan"],
+          [_annuitiesController],
+          [(value) => ref.read(userProvider.notifier).updateUser(annuities: double.tryParse(value))],
+        ),
+        _buildSection(
+          context,
+          "Pension Scheme of Central Government - Section 80CCD(1)",
+          "Contribution to NPS. Deduction Limit: ₹1,50,000",
+          ["Contribution to Pension Scheme"],
+          [_pensionSchemeController],
+          [(value) => ref.read(userProvider.notifier).updateUser(pensionScheme: double.tryParse(value))],
+        ),
+        _buildSection(
+          context,
+          "Section 80CCD(1B)",
+          "Additional Contribution to NPS. Deduction Limit: ₹ 50,000",
+          ["Additional Contribution to Pension Scheme"],
+          [_additionalPensionSchemeController],
+          [(value) => ref.read(userProvider.notifier).updateUser(additionalPensionScheme: double.tryParse(value))],
+        ),
+        _buildSection(
+          context,
+          "Section 80CCD(2)",
+          "Employer Contribution to Pension Scheme. Deduction Limit: 10% or 14% of salary",
+          ["Employer Contribution to Pension Scheme"],
+          [_employerPensionContributionController],
+          [(value) => ref.read(userProvider.notifier).updateUser(employerPensionContribution: double.tryParse(value))],
+        ),
+        _buildSection(
+          context,
+          "Section 80CCH",
+          "Contribution to Agnipath Scheme.",
+          ["Contribution to Agnipath Scheme"],
+          [_agnipathContributionController],
+          [(value) => ref.read(userProvider.notifier).updateUser(agnipathContribution: double.tryParse(value))],
+        ),
       ],
     );
   }
 
   Widget _build80DSection(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return ExpansionTile(
+      title: Text('80-D', style: Theme.of(context).textTheme.headlineSmall),
       children: [
-        Text('80-D', style: Theme.of(context).textTheme.headlineSmall),
-        Expanded(
-          child: Form(
-              key: _80DFormKey,
-              child: ListView(
-                children: [
-                  _buildSection(
-                    context,
-                    "Health Insurance Premium - Section 80D",
-                    "Deduction for health insurance premiums paid for self, spouse, children, and parents.",
-                    ["Health Insurance Premium", "Preventive Health Checkup"],
-                    [_healthInsuranceController, _preventiveCheckupController],
-                    [
-                      (value) => ref.read(userProvider.notifier).updateUser(healthInsurance: double.tryParse(value)),
-                      (value) => ref.read(userProvider.notifier).updateUser(preventiveCheckup: double.tryParse(value))
-                    ],
-                  ),
-                  _buildSection(
-                    context,
-                    "Medical Treatment - Section 80DDB",
-                    "Deduction for medical treatment of specified diseases. Deduction Limit: ₹ 40,000 or ₹ 1,00,000 for senior citizens",
-                    ["Medical Treatment"],
-                    [_medicalTreatmentController],
-                    [(value) => ref.read(userProvider.notifier).updateUser(medicalTreatment: double.tryParse(value))],
-                  ),
-                  _buildSection(
-                    context,
-                    "Education Loan Interest - Section 80E",
-                    "Deduction for interest on education loan. No maximum limit on the amount.",
-                    ["Education Loan Interest"],
-                    [_educationLoanInterestController],
-                    [(value) => ref.read(userProvider.notifier).updateUser(educationLoanInterest: double.tryParse(value))],
-                  ),
-                  _buildSection(
-                    context,
-                    "Home Loan Interest - Section 24(b)",
-                    "Deduction for interest on home loan. Deduction Limit: ₹ 2,00,000",
-                    ["Interest on Home Loan"],
-                    [_homeLoanInterestController],
-                    [(value) => ref.read(userProvider.notifier).updateUser(homeLoanInterest: double.tryParse(value))],
-                  ),
-                  _buildSection(
-                    context,
-                    "First-Time Home Buyer - Section 80EE",
-                    "Additional deduction for interest on home loan for first-time home buyers. Deduction Limit: ₹ 50,000",
-                    ["Interest on Home Loan (First-Time Buyer)"],
-                    [_firstTimeHomeBuyerInterestController],
-                    [(value) => ref.read(userProvider.notifier).updateUser(firstTimeHomeBuyerInterest: double.tryParse(value))],
-                  ),
-                  _buildSection(
-                    context,
-                    "Electric Vehicle Loan Interest - Section 80EEB",
-                    "Deduction for interest on loan for electric vehicle purchase. Deduction Limit: ₹ 1,50,000",
-                    ["Interest on Electric Vehicle Loan"],
-                    [_electricVehicleLoanInterestController],
-                    [(value) => ref.read(userProvider.notifier).updateUser(electricVehicleLoanInterest: double.tryParse(value))],
-                  ),
-                  _buildSection(
-                    context,
-                    "Donations - Section 80G",
-                    "Deduction for donations to charitable institutions. Deduction limit varies based on the institution.",
-                    ["Donations"],
-                    [_donationsController],
-                    [(value) => ref.read(userProvider.notifier).updateUser(donations: double.tryParse(value))],
-                  ),
-                  _buildSection(
-                    context,
-                    "Rent Paid - Section 80GG",
-                    "Deduction for rent paid by self-employed individuals. Deduction Limit: ₹ 5,000 per month",
-                    ["Rent Paid"],
-                    [_rentPaidController],
-                    [(value) => ref.read(userProvider.notifier).updateUser(rentPaid: double.tryParse(value))],
-                  ),
-                  _buildSection(
-                    context,
-                    "Scientific Research Donations - Section 35(1)(ii)",
-                    "Deduction for donations to institutions engaged in scientific research.",
-                    ["Scientific Research Donations"],
-                    [_scientificResearchDonationsController],
-                    [(value) => ref.read(userProvider.notifier).updateUser(scientificResearchDonations: double.tryParse(value))],
-                  ),
-                  _buildSection(
-                    context,
-                    "Political Party Donations - Section 80GGC",
-                    "Deduction for donations to political parties.",
-                    ["Political Party Donations"],
-                    [_politicalPartyDonationsController],
-                    [(value) => ref.read(userProvider.notifier).updateUser(politicalPartyDonations: double.tryParse(value))],
-                  ),
-                  _buildSection(
-                    context,
-                    "Savings Account Interest - Section 80TTA",
-                    "Deduction for interest earned on savings accounts. Deduction Limit: ₹ 10,000",
-                    ["Interest on Savings Account"],
-                    [_savingsAccountInterestController],
-                    [(value) => ref.read(userProvider.notifier).updateUser(savingsAccountInterest: double.tryParse(value))],
-                  ),
-                  _buildSection(
-                    context,
-                    "Deposits Interest - Section 80TTB",
-                    "Deduction for interest earned on deposits for senior citizens. Deduction Limit: ₹ 50,000",
-                    ["Interest on Deposits"],
-                    [_depositsInterestController],
-                    [(value) => ref.read(userProvider.notifier).updateUser(depositsInterest: double.tryParse(value))],
-                  ),
-                  _buildSection(
-                    context,
-                    "Disability Deduction - Section 80U",
-                    "Deduction for individuals with disabilities. Deduction Limit: ₹ 75,000 or ₹ 1,25,000 for severe disability.",
-                    ["Disability Deduction"],
-                    [_disabilityDeductionController],
-                    [(value) => ref.read(userProvider.notifier).updateUser(disabilityDeduction: double.tryParse(value))],
-                  ),
-                ],
-              )),
-        )
+        _buildSection(
+          context,
+          "Health Insurance Premium - Section 80D",
+          "Deduction for health insurance premiums paid for self, spouse, children, and parents.",
+          ["Health Insurance Premium", "Preventive Health Checkup"],
+          [_healthInsuranceController, _preventiveCheckupController],
+          [
+            (value) => ref.read(userProvider.notifier).updateUser(healthInsurance: double.tryParse(value)),
+            (value) => ref.read(userProvider.notifier).updateUser(preventiveCheckup: double.tryParse(value))
+          ],
+        ),
+        _buildSection(
+          context,
+          "Medical Treatment - Section 80DDB",
+          "Deduction for medical treatment of specified diseases. Deduction Limit: ₹ 40,000 or ₹ 1,00,000 for senior citizens",
+          ["Medical Treatment"],
+          [_medicalTreatmentController],
+          [(value) => ref.read(userProvider.notifier).updateUser(medicalTreatment: double.tryParse(value))],
+        ),
+        _buildSection(
+          context,
+          "Education Loan Interest - Section 80E",
+          "Deduction for interest on education loan. No maximum limit on the amount.",
+          ["Education Loan Interest"],
+          [_educationLoanInterestController],
+          [(value) => ref.read(userProvider.notifier).updateUser(educationLoanInterest: double.tryParse(value))],
+        ),
+        _buildSection(
+          context,
+          "Home Loan Interest - Section 24(b)",
+          "Deduction for interest on home loan. Deduction Limit: ₹ 2,00,000",
+          ["Interest on Home Loan"],
+          [_homeLoanInterestController],
+          [(value) => ref.read(userProvider.notifier).updateUser(homeLoanInterest: double.tryParse(value))],
+        ),
+        _buildSection(
+          context,
+          "First-Time Home Buyer - Section 80EE",
+          "Additional deduction for interest on home loan for first-time home buyers. Deduction Limit: ₹ 50,000",
+          ["Interest on Home Loan (First-Time Buyer)"],
+          [_firstTimeHomeBuyerInterestController],
+          [(value) => ref.read(userProvider.notifier).updateUser(firstTimeHomeBuyerInterest: double.tryParse(value))],
+        ),
+        _buildSection(
+          context,
+          "Electric Vehicle Loan Interest - Section 80EEB",
+          "Deduction for interest on loan for electric vehicle purchase. Deduction Limit: ₹ 1,50,000",
+          ["Interest on Electric Vehicle Loan"],
+          [_electricVehicleLoanInterestController],
+          [(value) => ref.read(userProvider.notifier).updateUser(electricVehicleLoanInterest: double.tryParse(value))],
+        ),
+        _buildSection(
+          context,
+          "Donations - Section 80G",
+          "Deduction for donations to charitable institutions. Deduction limit varies based on the institution.",
+          ["Donations"],
+          [_donationsController],
+          [(value) => ref.read(userProvider.notifier).updateUser(donations: double.tryParse(value))],
+        ),
+        _buildSection(
+          context,
+          "Rent Paid - Section 80GG",
+          "Deduction for rent paid by self-employed individuals. Deduction Limit: ₹ 5,000 per month",
+          ["Rent Paid"],
+          [_rentPaidController],
+          [(value) => ref.read(userProvider.notifier).updateUser(rentPaid: double.tryParse(value))],
+        ),
+        _buildSection(
+          context,
+          "Scientific Research Donations - Section 35(1)(ii)",
+          "Deduction for donations to institutions engaged in scientific research.",
+          ["Scientific Research Donations"],
+          [_scientificResearchDonationsController],
+          [(value) => ref.read(userProvider.notifier).updateUser(scientificResearchDonations: double.tryParse(value))],
+        ),
+        _buildSection(
+          context,
+          "Political Party Donations - Section 80GGC",
+          "Deduction for donations to political parties.",
+          ["Political Party Donations"],
+          [_politicalPartyDonationsController],
+          [(value) => ref.read(userProvider.notifier).updateUser(politicalPartyDonations: double.tryParse(value))],
+        ),
+        _buildSection(
+          context,
+          "Savings Account Interest - Section 80TTA",
+          "Deduction for interest earned on savings accounts. Deduction Limit: ₹ 10,000",
+          ["Interest on Savings Account"],
+          [_savingsAccountInterestController],
+          [(value) => ref.read(userProvider.notifier).updateUser(savingsAccountInterest: double.tryParse(value))],
+        ),
+        _buildSection(
+          context,
+          "Deposits Interest - Section 80TTB",
+          "Deduction for interest earned on deposits for senior citizens. Deduction Limit: ₹ 50,000",
+          ["Interest on Deposits"],
+          [_depositsInterestController],
+          [(value) => ref.read(userProvider.notifier).updateUser(depositsInterest: double.tryParse(value))],
+        ),
+        _buildSection(
+          context,
+          "Disability Deduction - Section 80U",
+          "Deduction for individuals with disabilities. Deduction Limit: ₹ 75,000 or ₹ 1,25,000 for severe disability.",
+          ["Disability Deduction"],
+          [_disabilityDeductionController],
+          [(value) => ref.read(userProvider.notifier).updateUser(disabilityDeduction: double.tryParse(value))],
+        ),
       ],
     );
   }
 
   Widget _buildSettingsSection(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('Settings', style: Theme.of(context).textTheme.headlineSmall),
-        const Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [Text("Coming soon")],
-          ),
-        ),
-      ],
+    return ExpansionTile(
+      title: Text('Tds', style: Theme.of(context).textTheme.headlineSmall),
+      children: const [Text("kalpesh")],
     );
   }
 

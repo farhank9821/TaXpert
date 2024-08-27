@@ -1,15 +1,16 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
 class UserTaxCalculation {
   // New Tax Regime fields
   double? grossIncome = 0.0;
-  double? totalDeductionNew = 75000.0;
+  double? totalDeductionNew = 0.0;
   double? taxableIncomeNew = 0.0;
   double? taxPayableNew = 0.0;
   double? taxesAlreadyPaidNew = 0.0;
   double? netTaxPayableNew = 0.0;
+  double? standardDeductionNew = 75000.0;
 
+  // Old Tax Regime fields
   double? standardDeductionOld = 50000.0;
   double? totalDeductionOld = 0.0;
   double? taxableIncomeOld = 0.0;
@@ -24,6 +25,7 @@ class UserTaxCalculation {
     this.taxPayableNew,
     this.taxesAlreadyPaidNew,
     this.netTaxPayableNew,
+    this.standardDeductionNew,
     this.standardDeductionOld,
     this.totalDeductionOld,
     this.taxableIncomeOld,
@@ -39,6 +41,7 @@ class UserTaxCalculation {
     double? taxPayableNew,
     double? taxesAlreadyPaidNew,
     double? netTaxPayableNew,
+    double? standardDeductionNew,
     double? standardDeductionOld,
     double? totalDeductionOld,
     double? taxableIncomeOld,
@@ -53,6 +56,7 @@ class UserTaxCalculation {
       taxPayableNew: taxPayableNew ?? this.taxPayableNew,
       taxesAlreadyPaidNew: taxesAlreadyPaidNew ?? this.taxesAlreadyPaidNew,
       netTaxPayableNew: netTaxPayableNew ?? this.netTaxPayableNew,
+      standardDeductionNew: standardDeductionNew ?? this.standardDeductionNew,
       standardDeductionOld: standardDeductionOld ?? this.standardDeductionOld,
       totalDeductionOld: totalDeductionOld ?? this.totalDeductionOld,
       taxableIncomeOld: taxableIncomeOld ?? this.taxableIncomeOld,
@@ -70,6 +74,7 @@ class UserTaxCalculation {
       'taxPayableNew': taxPayableNew,
       'taxesAlreadyPaidNew': taxesAlreadyPaidNew,
       'netTaxPayableNew': netTaxPayableNew,
+      'standardDeductionNew': standardDeductionNew,
       'standardDeductionOld': standardDeductionOld,
       'totalDeductionOld': totalDeductionOld,
       'taxableIncomeOld': taxableIncomeOld,
@@ -87,6 +92,7 @@ class UserTaxCalculation {
       taxPayableNew: map['taxPayableNew'] as double,
       taxesAlreadyPaidNew: map['taxesAlreadyPaidNew'] as double,
       netTaxPayableNew: map['netTaxPayableNew'] as double,
+      standardDeductionNew: map['standardDeductionNew'] as double,
       standardDeductionOld: map['standardDeductionOld'] as double,
       totalDeductionOld: map['totalDeductionOld'] as double,
       taxableIncomeOld: map['taxableIncomeOld'] as double,
@@ -102,7 +108,7 @@ class UserTaxCalculation {
 
   @override
   String toString() {
-    return 'UserTaxCalculation(grossIncome: $grossIncome, totalDeductionNew: $totalDeductionNew, taxableIncomeNew: $taxableIncomeNew, taxPayableNew: $taxPayableNew, taxesAlreadyPaidNew: $taxesAlreadyPaidNew, netTaxPayableNew: $netTaxPayableNew, standardDeductionOld: $standardDeductionOld, totalDeductionOld: $totalDeductionOld, taxableIncomeOld: $taxableIncomeOld, taxPayableOld: $taxPayableOld, taxesAlreadyPaidOld: $taxesAlreadyPaidOld, netTaxPayableOld: $netTaxPayableOld)';
+    return 'UserTaxCalculation(grossIncome: $grossIncome, totalDeductionNew: $totalDeductionNew, taxableIncomeNew: $taxableIncomeNew, taxPayableNew: $taxPayableNew, taxesAlreadyPaidNew: $taxesAlreadyPaidNew, netTaxPayableNew: $netTaxPayableNew, standardDeductionNew: $standardDeductionNew, standardDeductionOld: $standardDeductionOld, totalDeductionOld: $totalDeductionOld, taxableIncomeOld: $taxableIncomeOld, taxPayableOld: $taxPayableOld, taxesAlreadyPaidOld: $taxesAlreadyPaidOld, netTaxPayableOld: $netTaxPayableOld)';
   }
 
   @override
@@ -115,6 +121,7 @@ class UserTaxCalculation {
         other.taxPayableNew == taxPayableNew &&
         other.taxesAlreadyPaidNew == taxesAlreadyPaidNew &&
         other.netTaxPayableNew == netTaxPayableNew &&
+        other.standardDeductionNew == standardDeductionNew &&
         other.standardDeductionOld == standardDeductionOld &&
         other.totalDeductionOld == totalDeductionOld &&
         other.taxableIncomeOld == taxableIncomeOld &&
@@ -131,6 +138,7 @@ class UserTaxCalculation {
         taxPayableNew.hashCode ^
         taxesAlreadyPaidNew.hashCode ^
         netTaxPayableNew.hashCode ^
+        standardDeductionNew.hashCode ^
         standardDeductionOld.hashCode ^
         totalDeductionOld.hashCode ^
         taxableIncomeOld.hashCode ^

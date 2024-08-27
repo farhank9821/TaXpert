@@ -21,8 +21,13 @@ class TaxCalculationNotifier extends StateNotifier<UserTaxCalculation> {
           totalDeductionOld: 0,
         ));
 
+// -- =============================================================
+
   void calculateTax(UserModel um) {
-    double grossIncome = (um.salary ?? 0.0) + (um.incomeFromInterest ?? 0.0) + (um.rentalIncome ?? 0.0) + (um.incomeFromOtherSources ?? 0.0);
+    double rental_income = (um.rentalIncome ?? 0.0) - ((um.rentalIncome ?? 0.0) * 0.3);
+    rental_income = rental_income > 0 ? rental_income : 0;
+
+    double grossIncome = (um.salary ?? 0.0) + (um.incomeFromInterest ?? 0.0) + rental_income + (um.incomeFromOtherSources ?? 0.0);
 
     double deduction_80 = (um.lifeInsurance ?? 0.0) + (um.providentFund ?? 0.0) + (um.tuitionFees ?? 0.0);
     deduction_80 = deduction_80 > 150000 ? 150000 : deduction_80;
@@ -96,7 +101,21 @@ class TaxCalculationNotifier extends StateNotifier<UserTaxCalculation> {
         deduction_80TTB +
         deduction_80U;
 
-    double taxable_income = grossIncome - total_deduction;
+// -- =============================================================
+
+    double tds = um.tds ?? 0.0;
+    double advance_tax = um.advanceTax ?? 0.0;
+    double self_Ass = um.self_assessment_tax ?? 0.0;
+    double tax_paid_already = tds + advance_tax + self_Ass;
+
+// -- =============================================================
+    double taxable_income_new = grossIncome - total_deduction - 75000;
+    taxable_income_new = taxable_income_new > 0 ? taxable_income_new : 0;
+
+    double taxable_income_old = grossIncome - total_deduction - 50000;
+    taxable_income_old = taxable_income_old > 0 ? taxable_income_old : 0;
+
+// -- =============================================================
 
     double calculateOldTax(double income) {
       income = income - 50000;
@@ -113,8 +132,11 @@ class TaxCalculationNotifier extends StateNotifier<UserTaxCalculation> {
         tax = 112500 + (income - 1000000) * 0.30;
       }
 
+      double cess = tax * 0.04;
+      tax += cess;
       return tax;
     }
+// -- =============================================================
 
     double calculateNewTax(double income) {
       income = income - 75000;
@@ -134,22 +156,34 @@ class TaxCalculationNotifier extends StateNotifier<UserTaxCalculation> {
       } else {
         tax = 150000 + (income - 1500000) * 0.30;
       }
+
+      double cess = tax * 0.04;
+      tax += cess;
+
       return tax;
     }
-    // state = UserTaxCalculation(totalIncome: totalIncome, payableTax: payableTax, deduction: deduction);
+
+    double net_payable_new = calculateNewTax(taxable_income_new) - tax_paid_already;
+
+    net_payable_new = net_payable_new > 0 ? net_payable_new : 0;
+
+    double net_payable_old = calculateOldTax(taxable_income_old) - tax_paid_already;
+
+    net_payable_old = net_payable_old > 0 ? net_payable_old : 0;
 
     state = UserTaxCalculation(
       grossIncome: grossIncome,
       totalDeductionNew: total_deduction,
-      netTaxPayableNew: 0,
-      netTaxPayableOld: 0,
+      netTaxPayableNew: net_payable_new,
+      netTaxPayableOld: net_payable_old,
       standardDeductionOld: 50000,
-      taxPayableNew: calculateNewTax(taxable_income),
-      taxPayableOld: calculateOldTax(taxable_income),
-      taxableIncomeNew: taxable_income,
-      taxableIncomeOld: taxable_income,
-      taxesAlreadyPaidNew: 0,
-      taxesAlreadyPaidOld: 0,
+      standardDeductionNew: 75000,
+      taxPayableNew: calculateNewTax(taxable_income_new),
+      taxPayableOld: calculateOldTax(taxable_income_old),
+      taxableIncomeNew: taxable_income_new,
+      taxableIncomeOld: taxable_income_old,
+      taxesAlreadyPaidNew: tax_paid_already,
+      taxesAlreadyPaidOld: tax_paid_already,
       totalDeductionOld: total_deduction,
     );
   }

@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:tax_xpert/Home_Screen/home.dart';
-import 'package:tax_xpert/MainSection/Screens/calculator.dart';
-import 'package:tax_xpert/MainSection/Screens/HomeScreen.dart';
+import 'package:tax_xpert/Diff_calcs/calculator.dart';
 import 'package:tax_xpert/MainSection/Screens/insights.dart';
 
 import 'Screens/profileScreen.dart';
@@ -21,7 +20,7 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
   final List<Widget> screens = [
     const HomeScreen(),
     const CalculatorScreen(),
-    NewsScreen(),
+    const ReportGeneratorScreen(),
     const ProfileScreen(),
   ];
 

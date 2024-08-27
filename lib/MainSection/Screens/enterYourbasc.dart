@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'Diff_calcs/utils/custom_text_field.dart';
 import 'loginScreen.dart';
 
 class EntryTimeScreen extends StatefulWidget {
@@ -45,11 +44,11 @@ class _EntryTimeScreenState extends State<EntryTimeScreen> {
           padding: const EdgeInsets.all(15.0),
           child: Column(
             children: [
-              CustomTextField(
-                hintText: "Enter Your name",
-                controller: controller,
-                logo: Icon(Icons.people),
-              ),
+              // CustomTextField(
+              //   hintText: "Enter Your name",
+              //   controller: controller,
+              //   logo: Icon(Icons.people),
+              // ),
               const SizedBox(
                 height: 30,
               ),

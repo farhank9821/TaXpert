@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:tax_xpert/MainSection/Screens/Diff_calcs/utils/custom_button.dart';
 import 'package:tax_xpert/MainSection/Screens/enterYourbasc.dart';
 
 class FirstScreen extends StatelessWidget {
@@ -42,14 +41,6 @@ class FirstScreen extends StatelessWidget {
           ),
           const SizedBox(
             height: 80,
-          ),
-          CustomButton(
-            label: "Get Started",
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return const EntryTimeScreen();
-              }));
-            },
           ),
         ],
       ),

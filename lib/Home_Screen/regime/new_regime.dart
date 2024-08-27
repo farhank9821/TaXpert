@@ -30,7 +30,8 @@ class _NewRegimeState extends ConsumerState<NewRegime> {
     return Container(
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-          color: theme.colorScheme.onTertiary, borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20))),
+          color: theme.colorScheme.onTertiary,
+          borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20))),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -45,7 +46,7 @@ class _NewRegimeState extends ConsumerState<NewRegime> {
   Widget _buildCircularIndicator() {
     double progress = 0.0;
     if (_taxCalculation.grossIncome != null && _taxCalculation.grossIncome! > 0) {
-      progress = (_taxCalculation.totalDeductionNew ?? 0) / _taxCalculation.grossIncome!;
+      progress = (_taxCalculation.netTaxPayableNew ?? 0) / _taxCalculation.grossIncome!;
     }
     progress = progress.clamp(0.0, 1.0);
 
@@ -60,7 +61,7 @@ class _NewRegimeState extends ConsumerState<NewRegime> {
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  blurRadius: 2.0,
+                  blurRadius: 1.5,
                   spreadRadius: 1.0,
                 ),
               ],
@@ -75,14 +76,8 @@ class _NewRegimeState extends ConsumerState<NewRegime> {
           Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text(
-                'Net Tax payable',
-                style: TextStyle(color: Colors.white, fontSize: 12),
-              ),
-              Text(
-                '₹${(_taxCalculation.netTaxPayableNew ?? 0).toStringAsFixed(2)}',
-                style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
-              ),
+              Text('Net Tax payable', style: Theme.of(context).textTheme.titleSmall),
+              Text('₹${(_taxCalculation.netTaxPayableNew ?? 0).toStringAsFixed(2)}', style: Theme.of(context).textTheme.displaySmall),
             ],
           ),
         ],
@@ -97,27 +92,27 @@ class _NewRegimeState extends ConsumerState<NewRegime> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(child: _buildDetailRow('Gross Income', _taxCalculation.grossIncome ?? 0, Colors.green)),
-            Expanded(child: _buildDetailRow('Standard Deduction', _taxCalculation.standardDeductionOld ?? 0, Colors.orange)),
+            Expanded(child: _buildDetailRow('Standard Deduction', _taxCalculation.standardDeductionNew ?? 0, Colors.orange)),
           ],
         ),
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(child: _buildDetailRow('Total Deduction', _taxCalculation.totalDeductionOld ?? 0, Colors.amber)),
-            Expanded(child: _buildDetailRow('Taxable Income', _taxCalculation.taxableIncomeOld ?? 0, Colors.grey)),
+            Expanded(child: _buildDetailRow('Total Deduction', _taxCalculation.totalDeductionNew ?? 0, Colors.amber)),
+            Expanded(child: _buildDetailRow('Taxable Income', _taxCalculation.taxableIncomeNew ?? 0, Colors.grey)),
           ],
         ),
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(child: _buildDetailRow('Tax Payable', _taxCalculation.taxPayableOld ?? 0, Colors.blue)),
-            Expanded(child: _buildDetailRow('Taxes Already Paid', _taxCalculation.taxesAlreadyPaidOld ?? 0, Colors.purple))
+            Expanded(child: _buildDetailRow('Tax Payable', _taxCalculation.taxPayableNew ?? 0, Colors.blue)),
+            Expanded(child: _buildDetailRow('Taxes Already Paid', _taxCalculation.taxesAlreadyPaidNew ?? 0, Colors.purple))
           ],
         ),
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(child: _buildDetailRow('Net Tax Payable', _taxCalculation.netTaxPayableOld ?? 0, Colors.green)),
+            Expanded(child: _buildDetailRow('Net Tax Payable', _taxCalculation.netTaxPayableNew ?? 0, Colors.green)),
           ],
         ),
       ],

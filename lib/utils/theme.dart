@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 final TextTheme myTextTheme = TextTheme(
   displayLarge: GoogleFonts.nunito(fontSize: 32, color: const Color(0xFFFFFFFF), fontWeight: FontWeight.bold), // textColor
-  displayMedium: GoogleFonts.nunito(fontSize: 28, color: const Color(0xFFFFFFFF), fontWeight: FontWeight.bold), // textColor
+  displayMedium: GoogleFonts.nunito(fontSize: 24, color: const Color(0xFFFFFFFF), fontWeight: FontWeight.bold), // textColor
   displaySmall: GoogleFonts.nunito(fontSize: 20, color: const Color(0xFFFFFFFF), fontWeight: FontWeight.bold), // textColor
   bodyLarge: GoogleFonts.nunito(fontSize: 16, color: const Color(0xFFFFFFFF)), // textColor
   bodyMedium: GoogleFonts.nunito(fontSize: 14, color: const Color(0xFFFFFFFF)), // textColor

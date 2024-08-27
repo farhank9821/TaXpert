@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
 class UserModel {
@@ -29,6 +28,10 @@ class UserModel {
   final double? depositsInterest;
   final double? disabilityDeduction;
 
+  final double? tds;
+  final double? advanceTax;
+  final double? self_assessment_tax;
+
   UserModel({
     this.salary,
     this.incomeFromInterest,
@@ -56,6 +59,9 @@ class UserModel {
     this.savingsAccountInterest,
     this.depositsInterest,
     this.disabilityDeduction,
+    this.tds,
+    this.advanceTax,
+    this.self_assessment_tax,
   });
 
   UserModel copyWith({
@@ -85,6 +91,9 @@ class UserModel {
     double? savingsAccountInterest,
     double? depositsInterest,
     double? disabilityDeduction,
+    double? tds,
+    double? advanceTax,
+    double? self_assessment_tax,
   }) {
     return UserModel(
       salary: salary ?? this.salary,
@@ -113,6 +122,9 @@ class UserModel {
       savingsAccountInterest: savingsAccountInterest ?? this.savingsAccountInterest,
       depositsInterest: depositsInterest ?? this.depositsInterest,
       disabilityDeduction: disabilityDeduction ?? this.disabilityDeduction,
+      tds: tds ?? this.tds,
+      advanceTax: advanceTax ?? this.advanceTax,
+      self_assessment_tax: self_assessment_tax ?? this.self_assessment_tax,
     );
   }
 
@@ -144,6 +156,9 @@ class UserModel {
       'savingsAccountInterest': savingsAccountInterest,
       'depositsInterest': depositsInterest,
       'disabilityDeduction': disabilityDeduction,
+      'tds': tds,
+      'advanceTax': advanceTax,
+      'self_assessment_tax': self_assessment_tax,
     };
   }
 
@@ -175,17 +190,15 @@ class UserModel {
       savingsAccountInterest: map['savingsAccountInterest'] != null ? map['savingsAccountInterest'] as double : null,
       depositsInterest: map['depositsInterest'] != null ? map['depositsInterest'] as double : null,
       disabilityDeduction: map['disabilityDeduction'] != null ? map['disabilityDeduction'] as double : null,
+      tds: map['tds'] != null ? map['tds'] as double : null,
+      advanceTax: map['advanceTax'] != null ? map['advanceTax'] as double : null,
+      self_assessment_tax: map['self_assessment_tax'] != null ? map['self_assessment_tax'] as double : null,
     );
   }
 
   String toJson() => json.encode(toMap());
 
   factory UserModel.fromJson(String source) => UserModel.fromMap(json.decode(source) as Map<String, dynamic>);
-
-  @override
-  String toString() {
-    return 'UserModel(salary: $salary, incomeFromInterest: $incomeFromInterest, rentalIncome: $rentalIncome, incomeFromOtherSources: $incomeFromOtherSources, lifeInsurance: $lifeInsurance, providentFund: $providentFund, tuitionFees: $tuitionFees, annuities: $annuities, pensionScheme: $pensionScheme, additionalPensionScheme: $additionalPensionScheme, employerPensionContribution: $employerPensionContribution, agnipathContribution: $agnipathContribution, healthInsurance: $healthInsurance, preventiveCheckup: $preventiveCheckup, medicalTreatment: $medicalTreatment, educationLoanInterest: $educationLoanInterest, homeLoanInterest: $homeLoanInterest, firstTimeHomeBuyerInterest: $firstTimeHomeBuyerInterest, electricVehicleLoanInterest: $electricVehicleLoanInterest, donations: $donations, rentPaid: $rentPaid, scientificResearchDonations: $scientificResearchDonations, politicalPartyDonations: $politicalPartyDonations, savingsAccountInterest: $savingsAccountInterest, depositsInterest: $depositsInterest, disabilityDeduction: $disabilityDeduction)';
-  }
 
   @override
   bool operator ==(covariant UserModel other) {
@@ -216,7 +229,10 @@ class UserModel {
         other.politicalPartyDonations == politicalPartyDonations &&
         other.savingsAccountInterest == savingsAccountInterest &&
         other.depositsInterest == depositsInterest &&
-        other.disabilityDeduction == disabilityDeduction;
+        other.disabilityDeduction == disabilityDeduction &&
+        other.tds == tds &&
+        other.advanceTax == advanceTax &&
+        other.self_assessment_tax == self_assessment_tax;
   }
 
   @override
@@ -246,6 +262,14 @@ class UserModel {
         politicalPartyDonations.hashCode ^
         savingsAccountInterest.hashCode ^
         depositsInterest.hashCode ^
-        disabilityDeduction.hashCode;
+        disabilityDeduction.hashCode ^
+        tds.hashCode ^
+        advanceTax.hashCode ^
+        self_assessment_tax.hashCode;
+  }
+
+  @override
+  String toString() {
+    return 'UserModel(salary: $salary, incomeFromInterest: $incomeFromInterest, rentalIncome: $rentalIncome, incomeFromOtherSources: $incomeFromOtherSources, lifeInsurance: $lifeInsurance, providentFund: $providentFund, tuitionFees: $tuitionFees, annuities: $annuities, pensionScheme: $pensionScheme, additionalPensionScheme: $additionalPensionScheme, employerPensionContribution: $employerPensionContribution, agnipathContribution: $agnipathContribution, healthInsurance: $healthInsurance, preventiveCheckup: $preventiveCheckup, medicalTreatment: $medicalTreatment, educationLoanInterest: $educationLoanInterest, homeLoanInterest: $homeLoanInterest, firstTimeHomeBuyerInterest: $firstTimeHomeBuyerInterest, electricVehicleLoanInterest: $electricVehicleLoanInterest, donations: $donations, rentPaid: $rentPaid, scientificResearchDonations: $scientificResearchDonations, politicalPartyDonations: $politicalPartyDonations, savingsAccountInterest: $savingsAccountInterest, depositsInterest: $depositsInterest, disabilityDeduction: $disabilityDeduction, tds: $tds, advanceTax: $advanceTax, self_assessment_tax: $self_assessment_tax)';
   }
 }

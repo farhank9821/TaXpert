@@ -48,6 +48,10 @@ class _TaxDeductionFormState extends ConsumerState<TaxDeductionForm> {
   final TextEditingController _depositsInterestController = TextEditingController(text: "0");
   final TextEditingController _disabilityDeductionController = TextEditingController(text: "0");
 
+  final TextEditingController _tdsController = TextEditingController(text: "0");
+  final TextEditingController _self_assement_Controller = TextEditingController(text: "0");
+  final TextEditingController _advance_Tax_Controller = TextEditingController(text: "0");
+
   void initializeControllers(UserModel user) {
     _salaryIncomeController.text = user.salary?.toString() ?? '';
     _incomeFromInterestController.text = user.incomeFromInterest?.toString() ?? '';
@@ -75,6 +79,10 @@ class _TaxDeductionFormState extends ConsumerState<TaxDeductionForm> {
     _savingsAccountInterestController.text = user.savingsAccountInterest?.toString() ?? '';
     _depositsInterestController.text = user.depositsInterest?.toString() ?? '';
     _disabilityDeductionController.text = user.disabilityDeduction?.toString() ?? '';
+
+    _tdsController.text = user.tds?.toString() ?? '';
+    _self_assement_Controller.text = user.self_assessment_tax?.toString() ?? '';
+    _advance_Tax_Controller.text = user.advanceTax?.toString() ?? '';
   }
 
   @override
@@ -106,6 +114,10 @@ class _TaxDeductionFormState extends ConsumerState<TaxDeductionForm> {
     _savingsAccountInterestController.dispose();
     _depositsInterestController.dispose();
     _disabilityDeductionController.dispose();
+
+    _advance_Tax_Controller.dispose();
+    _tdsController.dispose();
+    _self_assement_Controller.dispose();
     super.dispose();
   }
 
@@ -129,10 +141,7 @@ class _TaxDeductionFormState extends ConsumerState<TaxDeductionForm> {
                   (value) => ref.read(userProvider.notifier).updateUser(rentalIncome: double.tryParse(value))),
               _buildTextField(_incomeFromOtherSourcesController, "Income From Other Sources",
                   (value) => ref.read(userProvider.notifier).updateUser(incomeFromOtherSources: double.tryParse(value))),
-              const Text(
-                "Under Section 80C Deduction",
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
+              Text("Under Section 80C Deduction", style: Theme.of(context).textTheme.displayMedium),
               _buildSection(
                 context,
                 "Life Insurance Premium, Provident Fund, Tuition Fees - 80C",
@@ -185,10 +194,7 @@ class _TaxDeductionFormState extends ConsumerState<TaxDeductionForm> {
                 [_agnipathContributionController],
                 [(value) => ref.read(userProvider.notifier).updateUser(agnipathContribution: double.tryParse(value))],
               ),
-              const Text(
-                "Under Section 80D Deduction",
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
+              Text("Under Section 80D Deduction", style: Theme.of(context).textTheme.displayMedium),
               _buildSection(
                 context,
                 "Health Insurance Premium - Section 80D",
@@ -296,6 +302,37 @@ class _TaxDeductionFormState extends ConsumerState<TaxDeductionForm> {
                 [_disabilityDeductionController],
                 [(value) => ref.read(userProvider.notifier).updateUser(disabilityDeduction: double.tryParse(value))],
               ),
+              Text("Tax Paid", style: Theme.of(context).textTheme.displayMedium),
+              _buildSection(
+                context,
+                "TDS - Tax Deducted at Source",
+                "A portion of your income that is directly deducted by the payer (e.g., employer, bank, etc.) at the time of payment.\nHow it works: The payer deducts the TDS based on the specified tax rates and submits it to the government",
+                ["TDS-Tax Deducted at Source"],
+                [_tdsController],
+                [
+                  (value) => ref.read(userProvider.notifier).updateUser(tds: double.tryParse(value)),
+                ],
+              ),
+              _buildSection(
+                context,
+                "Advance Tax",
+                "Tax paid in advance throughout the financial year by individuals and businesses with an estimated annual income tax liability exceeding ₹10,000.\n How it works: The taxpayer estimates their annual income and pays the tax in quarterly installmentst",
+                ["Advance Tax"],
+                [_advance_Tax_Controller],
+                [
+                  (value) => ref.read(userProvider.notifier).updateUser(advanceTax: double.tryParse(value)),
+                ],
+              ),
+              _buildSection(
+                context,
+                "Self-Assessment Tax",
+                "The remaining tax liability after considering TDS and advance tax payments.\nHow it works: If the total TDS and advance tax paid is less than the actual tax liability, the taxpayer must pay the difference as self-assessment tax.",
+                ["Self-Assessment Tax"],
+                [_self_assement_Controller],
+                [
+                  (value) => ref.read(userProvider.notifier).updateUser(self_assessment_tax: double.tryParse(value)),
+                ],
+              ),
               const SizedBox(height: 20),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
@@ -395,16 +432,16 @@ class _TaxDeductionFormState extends ConsumerState<TaxDeductionForm> {
                 builder: (context) {
                   return AlertDialog(
                     elevation: 10,
+                    backgroundColor: theme.colorScheme.onTertiary.withOpacity(0.8),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
-                    backgroundColor: theme.colorScheme.onSecondary,
                     content: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
                           title,
-                          style: theme.textTheme.bodyLarge!.copyWith(color: theme.colorScheme.surface),
+                          style: theme.textTheme.bodyLarge!.copyWith(color: theme.colorScheme.onSurface),
                         ),
                         const SizedBox(height: 16), // Add some spacing
                         Text(
@@ -473,6 +510,9 @@ class _TaxDeductionFormState extends ConsumerState<TaxDeductionForm> {
         savingsAccountInterest: double.tryParse(_savingsAccountInterestController.text),
         depositsInterest: double.tryParse(_depositsInterestController.text),
         disabilityDeduction: double.tryParse(_disabilityDeductionController.text),
+        tds: double.tryParse(_tdsController.text),
+        advanceTax: double.tryParse(_advance_Tax_Controller.text),
+        self_assessment_tax: double.tryParse(_self_assement_Controller.text),
       );
       taxCalculator.calculateTax(ref.read(userProvider));
 

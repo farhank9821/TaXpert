@@ -45,7 +45,7 @@ class _OldRegimeState extends ConsumerState<OldRegime> {
   Widget _buildCircularIndicator() {
     double progress = 0.0;
     if (_taxCalculation.grossIncome != null && _taxCalculation.grossIncome! > 0) {
-      progress = (_taxCalculation.totalDeductionNew ?? 0) / _taxCalculation.grossIncome!;
+      progress = (_taxCalculation.netTaxPayableOld ?? 0) / _taxCalculation.grossIncome!;
     }
     progress = progress.clamp(0.0, 1.0);
 
@@ -60,7 +60,7 @@ class _OldRegimeState extends ConsumerState<OldRegime> {
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  blurRadius: 2.0,
+                  blurRadius: 1.5,
                   spreadRadius: 1.0,
                 ),
               ],

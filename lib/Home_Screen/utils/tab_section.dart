@@ -44,18 +44,18 @@ class _CustomTabScreenState extends ConsumerState<CustomTabScreen> with SingleTi
   final TextEditingController _savingsAccountInterestController = TextEditingController();
   final TextEditingController _depositsInterestController = TextEditingController();
   final TextEditingController _disabilityDeductionController = TextEditingController();
+  final TextEditingController _tdsController = TextEditingController(text: "0");
+  final TextEditingController _self_assement_Controller = TextEditingController(text: "0");
+  final TextEditingController _advance_Tax_Controller = TextEditingController(text: "0");
 
   String formatDoubleToCurrency(double number) {
     NumberFormat formatter = NumberFormat("#,##,##0", "en_IN");
     return formatter.format(number);
   }
 
-  late TabController _tabController;
-
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 4, vsync: this); // Changed to 4
     final val = ref.read(userProvider);
 
     _salaryIncomeController.text = formatDoubleToCurrency(val.salary ?? 0.0);
@@ -85,6 +85,11 @@ class _CustomTabScreenState extends ConsumerState<CustomTabScreen> with SingleTi
     _savingsAccountInterestController.text = formatDoubleToCurrency(val.savingsAccountInterest ?? 0.0);
     _depositsInterestController.text = formatDoubleToCurrency(val.depositsInterest ?? 0.0);
     _disabilityDeductionController.text = formatDoubleToCurrency(val.disabilityDeduction ?? 0.0);
+    _disabilityDeductionController.text = formatDoubleToCurrency(val.disabilityDeduction ?? 0.0);
+
+    _tdsController.text = formatDoubleToCurrency(val.tds ?? 0.0);
+    _advance_Tax_Controller.text = formatDoubleToCurrency(val.advanceTax ?? 0.0);
+    _self_assement_Controller.text = formatDoubleToCurrency(val.self_assessment_tax ?? 0.0);
   }
 
   @override
@@ -116,6 +121,9 @@ class _CustomTabScreenState extends ConsumerState<CustomTabScreen> with SingleTi
     _savingsAccountInterestController.dispose();
     _depositsInterestController.dispose();
     _disabilityDeductionController.dispose();
+    _advance_Tax_Controller.dispose();
+    _tdsController.dispose();
+    _self_assement_Controller.dispose();
     super.dispose();
   }
 
@@ -149,30 +157,34 @@ class _CustomTabScreenState extends ConsumerState<CustomTabScreen> with SingleTi
     // Tab Bar View
   }
 
-  /*
-------- saari details------------ 
-   */
-
   Widget _buildIncomeSection(BuildContext context) {
-    return ExpansionTile(title: Text('Basic Salary', style: Theme.of(context).textTheme.headlineSmall), children: [
-      _buildTextField(
-          _salaryIncomeController, "Gross Income From Salary", (value) => ref.read(userProvider.notifier).updateUser(salary: double.tryParse(value))),
-      _buildTextField(
-        _incomeFromInterestController,
-        "Income From Interest",
-        (value) => ref.read(userProvider.notifier).updateUser(
-              incomeFromInterest: double.tryParse(value),
-            ),
-      ),
-      _buildTextField(_rentalIncomeController, "Rental Income Received",
-          (value) => ref.read(userProvider.notifier).updateUser(rentalIncome: double.tryParse(value))),
-      _buildTextField(_incomeFromOtherSourcesController, "Income From Other Sources",
-          (value) => ref.read(userProvider.notifier).updateUser(incomeFromOtherSources: double.tryParse(value))),
-    ]);
+    return ExpansionTile(
+        backgroundColor: Theme.of(context).colorScheme.onTertiary,
+        collapsedShape: const ContinuousRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
+        shape: const ContinuousRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
+        title: Text('Basic Salary', style: Theme.of(context).textTheme.headlineSmall),
+        children: [
+          _buildTextField(_salaryIncomeController, "Gross Income From Salary",
+              (value) => ref.read(userProvider.notifier).updateUser(salary: double.tryParse(value))),
+          _buildTextField(
+            _incomeFromInterestController,
+            "Income From Interest",
+            (value) => ref.read(userProvider.notifier).updateUser(
+                  incomeFromInterest: double.tryParse(value),
+                ),
+          ),
+          _buildTextField(_rentalIncomeController, "Rental Income Received",
+              (value) => ref.read(userProvider.notifier).updateUser(rentalIncome: double.tryParse(value))),
+          _buildTextField(_incomeFromOtherSourcesController, "Income From Other Sources",
+              (value) => ref.read(userProvider.notifier).updateUser(incomeFromOtherSources: double.tryParse(value))),
+        ]);
   }
 
   Widget _build80CSection(BuildContext context) {
     return ExpansionTile(
+      backgroundColor: Theme.of(context).colorScheme.onTertiary,
+      collapsedShape: const ContinuousRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
+      shape: const ContinuousRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
       title: Text('80-C', style: Theme.of(context).textTheme.headlineSmall),
       children: [
         _buildSection(
@@ -233,6 +245,9 @@ class _CustomTabScreenState extends ConsumerState<CustomTabScreen> with SingleTi
 
   Widget _build80DSection(BuildContext context) {
     return ExpansionTile(
+      backgroundColor: Theme.of(context).colorScheme.onTertiary,
+      collapsedShape: const ContinuousRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
+      shape: const ContinuousRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
       title: Text('80-D', style: Theme.of(context).textTheme.headlineSmall),
       children: [
         _buildSection(
@@ -348,8 +363,42 @@ class _CustomTabScreenState extends ConsumerState<CustomTabScreen> with SingleTi
 
   Widget _buildSettingsSection(BuildContext context) {
     return ExpansionTile(
-      title: Text('Tds', style: Theme.of(context).textTheme.headlineSmall),
-      children: const [Text("kalpesh")],
+      backgroundColor: Theme.of(context).colorScheme.onTertiary,
+      collapsedShape: const ContinuousRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
+      shape: const ContinuousRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
+      title: Text("Tax Paid", style: Theme.of(context).textTheme.headlineSmall),
+      children: [
+        _buildSection(
+          context,
+          "TDS - Tax Deducted at Source",
+          "A portion of your income that is directly deducted by the payer (e.g., employer, bank, etc.) at the time of payment.\nHow it works: The payer deducts the TDS based on the specified tax rates and submits it to the government",
+          ["TDS-Tax Deducted at Source"],
+          [_tdsController],
+          [
+            (value) => ref.read(userProvider.notifier).updateUser(tds: double.tryParse(value)),
+          ],
+        ),
+        _buildSection(
+          context,
+          "Advance Tax",
+          "Tax paid in advance throughout the financial year by individuals and businesses with an estimated annual income tax liability exceeding ₹10,000.\n How it works: The taxpayer estimates their annual income and pays the tax in quarterly installmentst",
+          ["Advance Tax"],
+          [_advance_Tax_Controller],
+          [
+            (value) => ref.read(userProvider.notifier).updateUser(advanceTax: double.tryParse(value)),
+          ],
+        ),
+        _buildSection(
+          context,
+          "Self-Assessment Tax",
+          "The remaining tax liability after considering TDS and advance tax payments.\nHow it works: If the total TDS and advance tax paid is less than the actual tax liability, the taxpayer must pay the difference as self-assessment tax.",
+          ["Self-Assessment Tax"],
+          [_self_assement_Controller],
+          [
+            (value) => ref.read(userProvider.notifier).updateUser(self_assessment_tax: double.tryParse(value)),
+          ],
+        ),
+      ],
     );
   }
 
@@ -366,7 +415,7 @@ class _CustomTabScreenState extends ConsumerState<CustomTabScreen> with SingleTi
           // Update the controller with formatted value
           double? numericValue = double.tryParse(parsedValue);
           if (numericValue != null) {
-            String formattedValue = NumberFormat('#,##0').format(numericValue);
+            String formattedValue = NumberFormat('#,##,##0').format(numericValue);
             controller.value = TextEditingValue(
               text: formattedValue,
               selection: TextSelection.collapsed(offset: formattedValue.length),
@@ -385,6 +434,7 @@ class _CustomTabScreenState extends ConsumerState<CustomTabScreen> with SingleTi
         keyboardType: TextInputType.number,
         inputFormatters: [
           FilteringTextInputFormatter.allow(RegExp(r'[0-9,]')),
+          LengthLimitingTextInputFormatter(10),
         ],
         validator: (value) {
           if (value == null || value.isEmpty) {
@@ -414,6 +464,8 @@ class _CustomTabScreenState extends ConsumerState<CustomTabScreen> with SingleTi
             onPressed: () {
               showDialog(
                 context: context,
+                barrierDismissible: true,
+                barrierColor: Theme.of(context).colorScheme.surface.withOpacity(0.8),
                 builder: (BuildContext context) {
                   return AlertDialog(
                     title: Text(title),

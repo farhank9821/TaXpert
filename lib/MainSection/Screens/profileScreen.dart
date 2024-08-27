@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tax_xpert/MainSection/Screens/Diff_calcs/utils/custom_text_field.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -42,11 +41,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
           padding: const EdgeInsets.all(15.0),
           child: Column(
             children: [
-              CustomTextField(
-                hintText: "Kalpesh Jangir",
-                controller: controller,
-                logo: Icon(Icons.people),
-              ),
+              // CustomTextField(
+              //   hintText: "Kalpesh Jangir",
+              //   controller: controller,
+              //   logo: Icon(Icons.people),
+              // ),
               const SizedBox(
                 height: 30,
               ),

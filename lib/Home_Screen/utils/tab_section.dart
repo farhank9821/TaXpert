@@ -131,7 +131,7 @@ class _CustomTabScreenState extends ConsumerState<CustomTabScreen> with SingleTi
   Widget build(BuildContext context) {
     ref.watch(userProvider);
     ref.listen<UserModel>(userProvider, (previous, next) {
-      ref.read(taxCalculationProvider.notifier).calculateTax(next);
+      ref.read(taxCalculationProvider.notifier).calculateTax(next, ref);
     });
     return Column(
       children: [
@@ -425,7 +425,7 @@ class _CustomTabScreenState extends ConsumerState<CustomTabScreen> with SingleTi
           onChange(parsedValue);
 
           // Recalculate tax
-          ref.read(taxCalculationProvider.notifier).calculateTax(ref.read(userProvider));
+          ref.read(taxCalculationProvider.notifier).calculateTax(ref.read(userProvider), ref);
         },
         decoration: InputDecoration(
           labelText: label,

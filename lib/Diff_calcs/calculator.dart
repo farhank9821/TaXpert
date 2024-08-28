@@ -10,15 +10,6 @@ class CalculatorScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.onTertiary,
-        title: Center(
-            child: Text(
-          'Calculator',
-          style: Theme.of(context).textTheme.displayMedium,
-        )),
-        elevation: 1,
-      ),
       body: Padding(
         padding: const EdgeInsets.all(8),
         child: SingleChildScrollView(

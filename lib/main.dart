@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tax_xpert/Login_screen/loginScreen.dart';
 import 'package:tax_xpert/form_fill/entryField.dart';
 import 'package:tax_xpert/utils/theme.dart';
 
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
         textTheme: myTextTheme,
         colorScheme: myColorScheme,
       ),
-      home: const TaxDeductionForm(),
+      home: const Signup(),
     );
   }
 }

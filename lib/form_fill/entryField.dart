@@ -258,7 +258,7 @@ class _TaxDeductionFormState extends ConsumerState<TaxDeductionForm> {
                 context,
                 "Rent Paid - Section 80GG",
                 "Deduction for rent paid by self-employed individuals. Deduction Limit: ₹ 5,000 per month",
-                ["Rent Paid"],
+                ["Rent Paid - Per Month"],
                 [_rentPaidController],
                 [(value) => ref.read(userProvider.notifier).updateUser(rentPaid: double.tryParse(value))],
               ),
@@ -369,7 +369,7 @@ class _TaxDeductionFormState extends ConsumerState<TaxDeductionForm> {
 
           onChange(parsedValue);
 
-          ref.read(taxCalculationProvider.notifier).calculateTax(ref.read(userProvider));
+          ref.read(taxCalculationProvider.notifier).calculateTax(ref.read(userProvider), ref);
         },
         decoration: InputDecoration(
           labelText: label,
@@ -514,7 +514,7 @@ class _TaxDeductionFormState extends ConsumerState<TaxDeductionForm> {
         advanceTax: double.tryParse(_advance_Tax_Controller.text),
         self_assessment_tax: double.tryParse(_self_assement_Controller.text),
       );
-      taxCalculator.calculateTax(ref.read(userProvider));
+      taxCalculator.calculateTax(ref.read(userProvider), ref);
 
       // Navigate to the next screen or show a confirmation
       Navigator.pushReplacement(

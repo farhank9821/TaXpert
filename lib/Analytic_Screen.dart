@@ -1,3 +1,4 @@
+import 'package:cross_file/cross_file.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -11,8 +12,6 @@ import 'package:tax_xpert/Repo/userModelRepo.dart';
 import 'package:tax_xpert/model/userCalculationModel.dart';
 import 'package:tax_xpert/model/user_model.dart';
 
-// Assume you have providers for UserTaxCalculation and userModel
-
 class ReportGeneratorScreen extends ConsumerWidget {
   const ReportGeneratorScreen({super.key});
 
@@ -21,7 +20,6 @@ class ReportGeneratorScreen extends ConsumerWidget {
     final user = ref.watch(userProvider);
     final taxCalc = ref.watch(taxCalculationProvider);
     return Scaffold(
-      appBar: AppBar(title: const Text('Tax Report Generator')),
       body: Column(
         children: [
           Expanded(

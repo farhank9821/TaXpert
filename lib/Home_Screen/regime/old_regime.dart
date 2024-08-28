@@ -80,7 +80,7 @@ class _OldRegimeState extends ConsumerState<OldRegime> {
                 style: TextStyle(color: Colors.white, fontSize: 12),
               ),
               Text(
-                '₹${(_taxCalculation.netTaxPayableNew ?? 0).toStringAsFixed(2)}',
+                '₹${(_taxCalculation.netTaxPayableOld ?? 0).toStringAsFixed(2)}',
                 style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ],

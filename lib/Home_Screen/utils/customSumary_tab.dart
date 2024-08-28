@@ -27,7 +27,7 @@ class _HomeSummaryState extends ConsumerState<HomeSummary> with SingleTickerProv
   Widget build(BuildContext context) {
     ref.watch(userProvider);
     ref.listen<UserModel>(userProvider, (previous, next) {
-      ref.read(taxCalculationProvider.notifier).calculateTax(next);
+      ref.read(taxCalculationProvider.notifier).calculateTax(next, ref);
     });
     var theme = Theme.of(context);
     return Column(

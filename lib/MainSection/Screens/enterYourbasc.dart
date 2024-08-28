@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-import 'loginScreen.dart';
+import 'package:tax_xpert/Login_screen/loginScreen.dart';
 
 class EntryTimeScreen extends StatefulWidget {
   const EntryTimeScreen({super.key});

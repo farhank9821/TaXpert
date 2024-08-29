@@ -4,7 +4,7 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:tax_xpert/Home_Screen/home.dart';
 import 'package:tax_xpert/Diff_calcs/calculator.dart';
-import 'package:tax_xpert/Analytic_Screen.dart';
+import 'package:tax_xpert/AnalyticScreen/Analytic_Screen.dart';
 import 'package:tax_xpert/Repo/UserCalculationRepo.dart';
 import 'package:tax_xpert/Repo/userModelRepo.dart';
 import 'package:tax_xpert/Repo/userbasicInfoRepo.dart';

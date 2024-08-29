@@ -1,11 +1,25 @@
 import 'dart:convert';
 
+import 'package:hive/hive.dart';
+
+part 'user_basic_info.g.dart';
+
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+@HiveType(typeId: 0)
 class UserBasicInfo {
+  @HiveField(0)
   final String name;
+
+  @HiveField(1)
   final int age;
+
+  @HiveField(2)
   final String? email;
+
+  @HiveField(3)
   final String? phoneNo;
+
+  @HiveField(4)
   final String? address;
 
   UserBasicInfo({

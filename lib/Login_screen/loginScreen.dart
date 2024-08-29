@@ -1,8 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tax_xpert/Login_screen/widgets/textformfield.dart';
+import 'package:tax_xpert/Repo/auth_repo.dart';
 import 'package:tax_xpert/Repo/userbasicInfoRepo.dart';
 import 'package:tax_xpert/form_fill/entryField.dart';
 
@@ -16,11 +17,32 @@ class Signup extends ConsumerStatefulWidget {
 class _SignupState extends ConsumerState<Signup> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _ageController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController(text: '-');
-  final TextEditingController _phoneController = TextEditingController(text: "-");
-  final TextEditingController _addressController = TextEditingController(text: "-");
+  late TextEditingController _nameController;
+  late TextEditingController _ageController;
+  late TextEditingController _emailController;
+  late TextEditingController _phoneController;
+  late TextEditingController _addressController;
+
+  @override
+  void initState() {
+    super.initState();
+    final userInfo = ref.read(userBasicProvider);
+    _nameController = TextEditingController(text: userInfo.name);
+    _ageController = TextEditingController(text: userInfo.age.toString());
+    _emailController = TextEditingController(text: userInfo.email ?? '-');
+    _phoneController = TextEditingController(text: userInfo.phoneNo ?? '-');
+    _addressController = TextEditingController(text: userInfo.address ?? '-');
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _ageController.dispose();
+    _emailController.dispose();
+    _phoneController.dispose();
+    _addressController.dispose();
+    super.dispose();
+  }
 
   Future<void> _selectDate(BuildContext context) async {
     DateTime? selectedDate = await showDatePicker(
@@ -39,7 +61,6 @@ class _SignupState extends ConsumerState<Signup> {
     }
   }
 
-  bool isShowPassword = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,23 +71,19 @@ class _SignupState extends ConsumerState<Signup> {
             Padding(
               padding: const EdgeInsets.only(left: 10.0),
               child: Text(
-                "Create Account",
+                "Update Account",
                 style: GoogleFonts.exo(fontWeight: FontWeight.w800, fontSize: 40),
               ),
             ),
-            const SizedBox(
-              height: 5,
-            ),
+            const SizedBox(height: 5),
             Padding(
               padding: const EdgeInsets.only(left: 14.0),
               child: Text(
-                "Enter the required details!",
+                "Update your details!",
                 style: GoogleFonts.exo(fontWeight: FontWeight.w400, fontSize: 20),
               ),
             ),
-            const SizedBox(
-              height: 50,
-            ),
+            const SizedBox(height: 50),
             TextFormWidget(
               type: TextInputType.name,
               icon: const Icon(Icons.person),
@@ -80,7 +97,7 @@ class _SignupState extends ConsumerState<Signup> {
               child: AbsorbPointer(
                 child: TextFormWidget(
                   type: TextInputType.number,
-                  icon: const Icon(Icons.person),
+                  icon: const Icon(Icons.calendar_today),
                   hintText: "23",
                   controller: _ageController,
                   label: "Enter your Age",
@@ -90,7 +107,7 @@ class _SignupState extends ConsumerState<Signup> {
             ),
             TextFormWidget(
               type: TextInputType.emailAddress,
-              icon: const Icon(Icons.person),
+              icon: const Icon(Icons.email),
               hintText: "abc@gmail.com",
               controller: _emailController,
               label: "Enter your Email",
@@ -98,7 +115,7 @@ class _SignupState extends ConsumerState<Signup> {
             ),
             TextFormWidget(
               type: TextInputType.phone,
-              icon: const Icon(Icons.person),
+              icon: const Icon(Icons.phone),
               hintText: "xxxxx xxxxx",
               controller: _phoneController,
               label: "Enter your Phone Number",
@@ -106,7 +123,7 @@ class _SignupState extends ConsumerState<Signup> {
             ),
             TextFormWidget(
               type: TextInputType.streetAddress,
-              icon: const Icon(Icons.person),
+              icon: const Icon(Icons.home),
               hintText: "x/xxx xxxxxxx xxxxxxx",
               controller: _addressController,
               label: "Enter your Address",
@@ -114,10 +131,10 @@ class _SignupState extends ConsumerState<Signup> {
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: Theme.of(context).colorScheme.primary, // Change this to your desired color
+                backgroundColor: Theme.of(context).colorScheme.primary,
               ),
               onPressed: _handleSubmit,
-              child: Text("Submit", style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Theme.of(context).colorScheme.surface)),
+              child: Text("Update", style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Theme.of(context).colorScheme.surface)),
             ),
           ],
         ),
@@ -125,20 +142,25 @@ class _SignupState extends ConsumerState<Signup> {
     );
   }
 
-  void _handleSubmit() {
+  Future<void> _handleSubmit() async {
     if (_formKey.currentState?.validate() ?? false) {
       final userBasic = ref.read(userBasicProvider.notifier);
-      userBasic.updateUserBasicInfo(
+      await userBasic.updateUserBasicInfo(
         name: _nameController.text,
         age: int.tryParse(_ageController.text),
         address: _addressController.text,
         phone: _phoneController.text,
         email: _emailController.text,
       );
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const TaxDeductionForm()), // Adjust based on actual target screen
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('User information updated successfully!')),
       );
+      await ref.read(authStateProvider.notifier).setLoggedIn(true);
+      context.go('/');
+      // Navigator.pushReplacement(
+      //   context,
+      //   MaterialPageRoute(builder: (context) => const TaxDeductionForm()), // Adjust based on actual target screen
+      // );
     }
   }
 }

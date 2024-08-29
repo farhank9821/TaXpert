@@ -34,7 +34,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         child: Form(
           key: _formKey,
           child: ListView(
-            children: const [
+            children: [
+              Text(name),
               // Displaying the gross income
               HomeSummary(),
               SizedBox(

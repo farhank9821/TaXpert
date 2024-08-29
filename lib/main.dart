@@ -1,25 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hive/hive.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:tax_xpert/Login_screen/loginScreen.dart';
-import 'package:tax_xpert/form_fill/entryField.dart';
+import 'package:tax_xpert/model/user_basic_info.dart';
+import 'package:tax_xpert/route/auth_state_route.dart';
 import 'package:tax_xpert/utils/theme.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  var directory = await getApplicationDocumentsDirectory();
+  Hive.init(directory.path);
+  Hive.registerAdapter(UserBasicInfoAdapter());
+  await Hive.openBox('authBox');
+  await Hive.openBox<UserBasicInfo>('user_basic_info');
   runApp(const ProviderScope(child: MyApp()));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
+  Widget build(BuildContext context, WidgetRef ref) {
+    final router = ref.watch(routerProvider);
+
+    return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       title: 'Tax Xpert',
       theme: ThemeData(
         textTheme: myTextTheme,
         colorScheme: myColorScheme,
       ),
-      home: const Signup(),
+      routerDelegate: router.routerDelegate,
+      routeInformationParser: router.routeInformationParser,
+      routeInformationProvider: router.routeInformationProvider,
     );
   }
 }

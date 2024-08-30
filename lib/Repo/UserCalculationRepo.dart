@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hive/hive.dart';
 import 'package:tax_xpert/Repo/userbasicInfoRepo.dart';
 import 'package:tax_xpert/model/userCalculationModel.dart';
 import 'package:tax_xpert/model/user_model.dart';
@@ -21,7 +22,20 @@ class TaxCalculationNotifier extends StateNotifier<UserTaxCalculation> {
           taxesAlreadyPaidNew: 0,
           taxesAlreadyPaidOld: 0,
           totalDeductionOld: 0,
-        ));
+        )) {
+    loadTaxCalculation();
+  }
+
+  static const String _boxName = 'taxCalculationBox';
+  static const String _key = 'userTaxCalculation';
+
+  Future<void> loadTaxCalculation() async {
+    final box = await Hive.openBox<UserTaxCalculation>(_boxName);
+    final savedCalculation = box.get(_key);
+    if (savedCalculation != null) {
+      state = savedCalculation;
+    }
+  }
 
   Future<void> calculateTax(UserModel um, ref) async {
     final basicInfo = ref.read(userBasicProvider);
@@ -207,17 +221,8 @@ class TaxCalculationNotifier extends StateNotifier<UserTaxCalculation> {
       taxesAlreadyPaidOld: tax_paid_already,
       totalDeductionOld: total_deduction,
     );
+
+    final box = await Hive.openBox<UserTaxCalculation>(_boxName);
+    await box.put(_key, state);
   }
 }
-
-
-
-/*
-60
-10 000 000
-
-15,11.5,11.5
-
-
-60,5
- */

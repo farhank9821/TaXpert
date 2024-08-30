@@ -3,7 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:tax_xpert/Login_screen/loginScreen.dart';
+import 'package:tax_xpert/model/userCalculationModel.dart';
 import 'package:tax_xpert/model/user_basic_info.dart';
+import 'package:tax_xpert/model/user_model.dart';
 import 'package:tax_xpert/route/auth_state_route.dart';
 import 'package:tax_xpert/utils/theme.dart';
 
@@ -12,7 +14,11 @@ void main() async {
   var directory = await getApplicationDocumentsDirectory();
   Hive.init(directory.path);
   Hive.registerAdapter(UserBasicInfoAdapter());
+  Hive.registerAdapter(UserModelAdapter());
+  Hive.registerAdapter(UserTaxCalculationAdapter());
   await Hive.openBox('authBox');
+  //await Hive.openBox('taxCalculationBox');
+  //await Hive.openBox<UserModel>('userBox');
   await Hive.openBox<UserBasicInfo>('user_basic_info');
   runApp(const ProviderScope(child: MyApp()));
 }

@@ -1,10 +1,24 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hive/hive.dart';
 import 'package:tax_xpert/model/user_model.dart';
 
 final userProvider = StateNotifierProvider<UserNotifier, UserModel>((ref) => UserNotifier());
 
 class UserNotifier extends StateNotifier<UserModel> {
-  UserNotifier() : super(UserModel());
+  UserNotifier() : super(UserModel()) {
+    _loadUserData();
+  }
+
+  static const String _boxName = 'userBox';
+  static const String _key = 'userData';
+
+  Future<void> _loadUserData() async {
+    final box = await Hive.openBox<UserModel>(_boxName);
+    final savedUser = box.get(_key);
+    if (savedUser != null) {
+      state = savedUser;
+    }
+  }
 
   Future<void> updateUser({
     double? salary,
@@ -68,5 +82,8 @@ class UserNotifier extends StateNotifier<UserModel> {
       advanceTax: advanceTax,
       self_assessment_tax: self_assessment_tax,
     );
+
+    final box = await Hive.openBox<UserModel>(_boxName);
+    await box.put(_key, state);
   }
 }

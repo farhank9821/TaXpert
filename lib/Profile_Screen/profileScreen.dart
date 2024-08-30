@@ -1,21 +1,24 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tax_xpert/Login_screen/widgets/textformfield.dart';
+import 'package:tax_xpert/Repo/UserCalculationRepo.dart';
 import 'package:tax_xpert/Repo/auth_repo.dart';
+import 'package:tax_xpert/Repo/userModelRepo.dart';
 import 'package:tax_xpert/Repo/userbasicInfoRepo.dart';
+import 'package:tax_xpert/model/userCalculationModel.dart';
+import 'package:tax_xpert/model/user_basic_info.dart';
+import 'package:tax_xpert/model/user_model.dart';
 
-class Signup extends ConsumerStatefulWidget {
-  const Signup({super.key});
+class Profile_Screen extends ConsumerStatefulWidget {
+  const Profile_Screen({super.key});
 
   @override
-  ConsumerState<Signup> createState() => _SignupState();
+  ConsumerState<Profile_Screen> createState() => _Profile_ScreenState();
 }
 
-class _SignupState extends ConsumerState<Signup> {
+class _Profile_ScreenState extends ConsumerState<Profile_Screen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   late TextEditingController _nameController;
@@ -27,12 +30,22 @@ class _SignupState extends ConsumerState<Signup> {
   @override
   void initState() {
     super.initState();
+    _nameController = TextEditingController();
+    _ageController = TextEditingController();
+    _emailController = TextEditingController();
+    _phoneController = TextEditingController();
+    _addressController = TextEditingController();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     final userInfo = ref.read(userBasicProvider);
-    _nameController = TextEditingController(text: userInfo.name);
-    _ageController = TextEditingController(text: userInfo.age.toString());
-    _emailController = TextEditingController(text: userInfo.email ?? '-');
-    _phoneController = TextEditingController(text: userInfo.phoneNo ?? '-');
-    _addressController = TextEditingController(text: userInfo.address ?? '-');
+    _nameController.text = userInfo.name;
+    _ageController.text = userInfo.age.toString();
+    _emailController.text = userInfo.email ?? '-';
+    _phoneController.text = userInfo.phoneNo ?? '-';
+    _addressController.text = userInfo.address ?? '-';
   }
 
   @override
@@ -72,7 +85,7 @@ class _SignupState extends ConsumerState<Signup> {
             Padding(
               padding: const EdgeInsets.only(left: 10.0),
               child: Text(
-                "Welcome",
+                "Update Account",
                 style: GoogleFonts.exo(fontWeight: FontWeight.w800, fontSize: 40),
               ),
             ),
@@ -80,7 +93,7 @@ class _SignupState extends ConsumerState<Signup> {
             Padding(
               padding: const EdgeInsets.only(left: 14.0),
               child: Text(
-                "Add your details!",
+                "Update your details!",
                 style: GoogleFonts.exo(fontWeight: FontWeight.w400, fontSize: 20),
               ),
             ),
@@ -137,6 +150,13 @@ class _SignupState extends ConsumerState<Signup> {
               onPressed: _handleSubmit,
               child: Text("Update", style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Theme.of(context).colorScheme.surface)),
             ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Theme.of(context).colorScheme.primary,
+              ),
+              onPressed: logout,
+              child: Text("Logout", style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Theme.of(context).colorScheme.surface)),
+            ),
           ],
         ),
       ),
@@ -153,15 +173,17 @@ class _SignupState extends ConsumerState<Signup> {
         phone: _phoneController.text,
         email: _emailController.text,
       );
+      ref.read(taxCalculationProvider);
+      ref.read(userProvider);
+
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('User information updated successfully!')),
+        const SnackBar(content: Text('All providers updated successfully!')),
       );
-      await ref.read(authStateProvider.notifier).setLoggedIn(true);
-      context.go('/tax-form');
-      // Navigator.pushReplacement(
-      //   context,
-      //   MaterialPageRoute(builder: (context) => const TaxDeductionForm()), // Adjust based on actual target screen
-      // );
     }
+  }
+
+  Future<void> logout() async {
+    await ref.read(authStateProvider.notifier).setLoggedIn(false);
+    context.go('/login');
   }
 }

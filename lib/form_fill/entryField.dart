@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:tax_xpert/MainSection/navigationbarScreen.dart';
+import 'package:tax_xpert/Profile_Screen/profileScreen.dart';
 import 'package:tax_xpert/Repo/UserCalculationRepo.dart';
+import 'package:tax_xpert/Repo/auth_repo.dart';
 import 'package:tax_xpert/Repo/userModelRepo.dart';
 import 'package:tax_xpert/model/user_model.dart'; // Adjust import based on actual file location
 import 'package:tax_xpert/Home_Screen/home.dart'; // Adjust import based on actual file location
@@ -477,7 +480,7 @@ class _TaxDeductionFormState extends ConsumerState<TaxDeductionForm> {
     );
   }
 
-  void _handleSubmit() {
+  Future<void> _handleSubmit() async {
     if (_formKey.currentState?.validate() ?? false) {
       final user = ref.read(userProvider.notifier);
       final taxCalculator = ref.read(taxCalculationProvider.notifier);
@@ -517,32 +520,8 @@ class _TaxDeductionFormState extends ConsumerState<TaxDeductionForm> {
       taxCalculator.calculateTax(ref.read(userProvider), ref);
 
       // Navigate to the next screen or show a confirmation
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const BottomNavigationScreen()), // Adjust based on actual target screen
-      );
+      await ref.read(authStateProvider.notifier).setNewUser(false);
+      context.go('/');
     }
-  }
-}
-
-class NumberInputFormatter extends TextInputFormatter {
-  final NumberFormat numberFormat = NumberFormat("#,##0");
-
-  @override
-  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
-    if (newValue.text.isEmpty || double.tryParse(newValue.text.replaceAll(',', '')) == null) {
-      return oldValue;
-    }
-
-    double value = double.parse(newValue.text.replaceAll(',', ''));
-
-    String formattedValue = numberFormat.format(value);
-
-    int cursorPosition = formattedValue.length - (newValue.text.length - newValue.selection.baseOffset);
-
-    return TextEditingValue(
-      text: formattedValue,
-      selection: TextSelection.collapsed(offset: cursorPosition),
-    );
   }
 }

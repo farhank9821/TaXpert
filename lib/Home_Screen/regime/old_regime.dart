@@ -30,7 +30,8 @@ class _OldRegimeState extends ConsumerState<OldRegime> {
     return Container(
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-          color: theme.colorScheme.onTertiary, borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20))),
+          color: theme.colorScheme.onTertiary,
+          borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20))),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

@@ -6,7 +6,7 @@ final userProvider = StateNotifierProvider<UserNotifier, UserModel>((ref) => Use
 class UserNotifier extends StateNotifier<UserModel> {
   UserNotifier() : super(UserModel());
 
-  void updateUser({
+  Future<void> updateUser({
     double? salary,
     double? incomeFromInterest,
     double? rentalIncome,
@@ -36,7 +36,7 @@ class UserNotifier extends StateNotifier<UserModel> {
     double? tds,
     double? advanceTax,
     double? self_assessment_tax,
-  }) {
+  }) async {
     state = state.copyWith(
       salary: salary,
       incomeFromInterest: incomeFromInterest,

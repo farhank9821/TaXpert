@@ -23,7 +23,7 @@ class TaxCalculationNotifier extends StateNotifier<UserTaxCalculation> {
           totalDeductionOld: 0,
         ));
 
-  void calculateTax(UserModel um, WidgetRef ref) {
+  Future<void> calculateTax(UserModel um, ref) async {
     final basicInfo = ref.read(userBasicProvider);
     double rental_income = (um.rentalIncome ?? 0.0) - ((um.rentalIncome ?? 0.0) * 0.3);
     rental_income = rental_income > 0 ? rental_income : 0;

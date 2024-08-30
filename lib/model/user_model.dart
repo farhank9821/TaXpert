@@ -1,37 +1,68 @@
 import 'dart:convert';
 
+import 'package:hive/hive.dart';
+part 'user_model.g.dart';
+
+@HiveType(typeId: 1)
 class UserModel {
+  @HiveField(0)
   final double? salary;
+  @HiveField(1)
   final double? incomeFromInterest;
+  @HiveField(2)
   final double? rentalIncome;
+  @HiveField(3)
   final double? incomeFromOtherSources;
+  @HiveField(4)
   final double? lifeInsurance;
+  @HiveField(5)
   final double? providentFund;
+  @HiveField(6)
   final double? tuitionFees;
+  @HiveField(7)
   final double? annuities;
+  @HiveField(8)
   final double? pensionScheme;
+  @HiveField(9)
   final double? additionalPensionScheme;
+  @HiveField(10)
   final double? employerPensionContribution;
+  @HiveField(11)
   final double? agnipathContribution;
+  @HiveField(12)
   final double? healthInsurance;
+  @HiveField(13)
   final double? preventiveCheckup;
+  @HiveField(14)
   final double? medicalTreatment;
+  @HiveField(15)
   final double? educationLoanInterest;
+  @HiveField(16)
   final double? homeLoanInterest;
+  @HiveField(17)
   final double? firstTimeHomeBuyerInterest;
+  @HiveField(18)
   final double? electricVehicleLoanInterest;
+  @HiveField(19)
   final double? donations;
+  @HiveField(20)
   final double? rentPaid;
+  @HiveField(21)
   final double? scientificResearchDonations;
+  @HiveField(22)
   final double? politicalPartyDonations;
+  @HiveField(23)
   final double? savingsAccountInterest;
+  @HiveField(24)
   final double? depositsInterest;
+  @HiveField(25)
   final double? disabilityDeduction;
-
+  @HiveField(26)
   final double? tds;
+  @HiveField(27)
   final double? advanceTax;
+  @HiveField(28)
   final double? self_assessment_tax;
-
   UserModel({
     this.salary,
     this.incomeFromInterest,

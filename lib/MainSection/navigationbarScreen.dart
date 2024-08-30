@@ -8,9 +8,10 @@ import 'package:tax_xpert/AnalyticScreen/Analytic_Screen.dart';
 import 'package:tax_xpert/Repo/UserCalculationRepo.dart';
 import 'package:tax_xpert/Repo/userModelRepo.dart';
 import 'package:tax_xpert/Repo/userbasicInfoRepo.dart';
+import 'package:tax_xpert/model/user_basic_info.dart';
 import 'package:tax_xpert/model/user_model.dart';
 
-import 'Screens/profileScreen.dart';
+import '../Profile_Screen/profileScreen.dart';
 
 class BottomNavigationScreen extends ConsumerStatefulWidget {
   const BottomNavigationScreen({super.key});
@@ -26,7 +27,7 @@ class _BottomNavigationScreenState extends ConsumerState<BottomNavigationScreen>
     const HomeScreen(),
     const CalculatorScreen(),
     const ReportGeneratorScreen(),
-    const ProfileScreen(),
+    const Profile_Screen(),
   ];
 
   void onTap(int index) {
@@ -37,10 +38,11 @@ class _BottomNavigationScreenState extends ConsumerState<BottomNavigationScreen>
 
   @override
   Widget build(BuildContext context) {
-    final userbasic = ref.watch(userBasicProvider);
+    final user = ref.watch(userBasicProvider.notifier);
     ref.listen<UserModel>(userProvider, (previous, next) {
       ref.read(taxCalculationProvider.notifier).calculateTax(next, ref);
     });
+    final userbasic = ref.watch(userBasicProvider);
 
     String name = userbasic.name;
     return Scaffold(

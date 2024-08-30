@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:tax_xpert/Home_Screen/utils/customSumary_tab.dart';
 import 'package:tax_xpert/Repo/UserCalculationRepo.dart';
 import 'package:tax_xpert/Repo/userModelRepo.dart';
@@ -36,16 +37,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           child: ListView(
             children: [
               Text(name),
+              Text(taxCalculation.grossIncome.toString()),
               // Displaying the gross income
-              HomeSummary(),
-              SizedBox(
+              const HomeSummary(),
+              const SizedBox(
                 height: 30,
               ),
               // Custom tab section
-              CustomTabScreen(),
+              const CustomTabScreen(),
 
               // Spacer
-              SizedBox(
+              const SizedBox(
                 height: 50,
               ),
             ],

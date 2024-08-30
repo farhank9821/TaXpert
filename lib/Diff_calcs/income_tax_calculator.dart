@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:number_to_words/number_to_words.dart';
 import 'package:tax_xpert/Diff_calcs/utils/chart_display.dart';
+import 'package:tax_xpert/Diff_calcs/utils/condition_column.dart';
+import 'package:tax_xpert/utils/number_to_words.dart';
+
+import '../utils/numberFormat.dart';
 
 class SalaryCalculatorScreen extends StatefulWidget {
   const SalaryCalculatorScreen({super.key});
@@ -14,15 +19,20 @@ class _SalaryCalculatorScreenState extends State<SalaryCalculatorScreen> {
   final TextEditingController _salaryController = TextEditingController(text: '0');
   double _salary = 0;
   double _pf = 0;
-  double _tax = 0;
+  double _incomeTax = 0;
+  double _healthandCess = 0;
   double _netPay = 0;
   double _totalTax = 0;
+  double taxPerTenSpent = 0;
+  double standard_deduction = 75000;
 
   String _salaryRate = 'Annual';
 
   void _calculate() {
     setState(() {
       _salary = double.tryParse(_salaryController.text.replaceAll(',', '')) ?? 0;
+
+      // Adjust salary based on the selected rate
       if (_salaryRate == 'Month') {
         _salary *= 12;
       } else if (_salaryRate == 'Semimonthly') {
@@ -35,15 +45,29 @@ class _SalaryCalculatorScreenState extends State<SalaryCalculatorScreen> {
         _salary *= 365 * 8; // Assuming 8 working hours per day
       }
 
+      // Calculate PF (12% of salary)
       _pf = _salary * 0.12;
-      _tax = calculateNewTax(_salary - _pf);
-      _netPay = _salary - _pf - _tax;
-      _totalTax = _pf + _tax;
+
+      // Calculate income tax and health & cess only if salary > 3,00,000
+      if (_salary > 300000) {
+        _incomeTax = calculateNewTax(_salary);
+        _healthandCess = (_incomeTax * 0.04);
+      } else {
+        _incomeTax = 0;
+        _healthandCess = 0;
+        standard_deduction = 0;
+      }
+
+      // Calculate total tax
+      _totalTax = _pf + _incomeTax + _healthandCess - standard_deduction;
+
+      // Calculate tax per 10 spent and net pay
+      taxPerTenSpent = (_totalTax / _salary) * 10;
+      _netPay = _salary - _totalTax;
     });
   }
 
   double calculateNewTax(double income) {
-    income = income - 75000;
     income = income > 0 ? income : 0;
     double tax = 0;
 
@@ -61,10 +85,24 @@ class _SalaryCalculatorScreenState extends State<SalaryCalculatorScreen> {
       tax = 150000 + (income - 1500000) * 0.30;
     }
 
-    double cess = tax * 0.04;
-    tax += cess;
-
     return tax;
+  }
+
+  final NumberToWordsConverter _converter = NumberToWordsConverter(); // Instantiate the class
+  String _labelText = '';
+  void _updateLabelText(String value) {
+    if (value.isEmpty) {
+      setState(() {
+        _labelText = "Salary";
+      });
+      return;
+    }
+
+    int val = int.parse(_salaryController.text.replaceAll(',', ''));
+
+    setState(() {
+      _labelText = _converter.numberToWords(val); // Use the class method
+    });
   }
 
   @override
@@ -80,13 +118,14 @@ class _SalaryCalculatorScreenState extends State<SalaryCalculatorScreen> {
             children: [
               TextFormField(
                 controller: _salaryController,
-                decoration: const InputDecoration(
-                  labelText: "Salary",
-                  border: OutlineInputBorder(),
+                decoration: InputDecoration(
+                  labelText: _labelText,
+                  hintText: "Enter your Salary",
+                  border: const OutlineInputBorder(),
                 ),
                 keyboardType: TextInputType.number,
+                onChanged: _updateLabelText,
                 inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
                   NumberInputFormatter(),
                 ],
                 validator: (value) {
@@ -123,40 +162,126 @@ class _SalaryCalculatorScreenState extends State<SalaryCalculatorScreen> {
                 child: const Text('Calculate'),
               ),
               const SizedBox(height: 20.0),
-              Text('Salary: ₹${NumberFormat('#,##,##0').format(_salary)}'),
-              Text('Provident Fund (PF): ₹${NumberFormat('#,##,##0').format(_pf)}'),
-              Text('Total Tax: ₹${NumberFormat('#,##,##0').format(_tax)}'),
-              Text('Net Pay: ₹${NumberFormat('#,##,##0').format(_netPay)}'),
+              // Text('Salary: ₹${NumberFormat('#,##,##0').format(_salary)}'),
+              // Text('Provident Fund (PF): ₹${NumberFormat('#,##,##0').format(_pf)}'),
+              // Text('Income Tax : ₹${NumberFormat('#,##,##0').format(_incomeTax)}'),
+              // Text('Health and Cess: ₹${NumberFormat('#,##,##0').format(_healthandCess)}'),
+              // Text('Total Tax: ₹${NumberFormat('#,##,##0').format(_totalTax)}'),
+              // Text('Standard Deduction: ₹${NumberFormat('#,##,##0').format(standart_deduction)}'),
+              // Text('Net Pay: ₹${NumberFormat('#,##,##0').format(_netPay)}'),
+
+              ConditionColumn(
+                name: 'Salary',
+                value: _salary,
+                check_Condition: _netPay > 0,
+                isHighlighted: false,
+              ),
+              ConditionColumn(
+                name: 'Provident Fund (PF)',
+                value: _pf,
+                check_Condition: _netPay > 0,
+                modifier: '- ',
+                isHighlighted: false,
+              ),
+              ConditionColumn(
+                name: 'Income Tax',
+                value: _incomeTax,
+                check_Condition: _netPay > 0,
+                modifier: '- ',
+                isHighlighted: false,
+              ),
+              ConditionColumn(
+                name: 'Health and Cess',
+                value: _healthandCess,
+                check_Condition: _netPay > 0,
+                modifier: '- ',
+                isHighlighted: false,
+              ),
+              ConditionColumn(
+                name: 'Total Tax',
+                value: _totalTax,
+                check_Condition: _netPay > 0,
+                isHighlighted: false,
+              ),
+              GestureDetector(
+                onDoubleTap: () => _showStandardDeductionDialog,
+                child: ConditionColumn(
+                  name: 'Standard Deduction',
+                  value: standard_deduction,
+                  check_Condition: _netPay > 0,
+                  modifier: '- ',
+                  isHighlighted: false,
+                ),
+              ),
+              ConditionColumn(
+                name: 'Net Pay',
+                value: _netPay,
+                check_Condition: _netPay > 0,
+                modifier: '* ',
+                isHighlighted: false,
+              ),
+
               if (_netPay > 0)
                 TaxBreakdownChart(
                   netPayPercentage: (_netPay / (_netPay + _totalTax)) * 100,
                   totalTaxPercentage: (_totalTax / (_netPay + _totalTax)) * 100,
                 ),
+              if (_netPay > 0)
+                Text(
+                  'In other words, every time you spend ₹10 of your hard-earned money, ₹${taxPerTenSpent.toStringAsFixed(2)} goes to the government.',
+                  style: TextStyle(fontSize: 16),
+                ),
+              if (_netPay > 0) Text('Summary'),
+              if (_netPay > 0)
+                Text(
+                    'If you make ₹${_salary.toStringAsFixed(2)}  a year living in India, you will be taxed ₹${_totalTax.toStringAsFixed(2)}. That means that your net pay will be ₹${_netPay.toStringAsFixed(2)} per year, or ₹${(_netPay / 12).toStringAsFixed(2)} per month. Your average tax rate is 22.3% and your marginal')
             ],
           ),
         ),
       ),
     );
   }
-}
 
-class NumberInputFormatter extends TextInputFormatter {
-  final NumberFormat numberFormat = NumberFormat("#,##,##0");
-
-  @override
-  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
-    if (newValue.text.isEmpty || double.tryParse(newValue.text.replaceAll(',', '')) == null) {
-      return oldValue;
-    }
-
-    double value = double.parse(newValue.text.replaceAll(',', ''));
-    String formattedValue = numberFormat.format(value);
-
-    int cursorPosition = formattedValue.length - (newValue.text.length - newValue.selection.baseOffset);
-
-    return TextEditingValue(
-      text: formattedValue,
-      selection: TextSelection.collapsed(offset: cursorPosition),
+  void _showStandardDeductionDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Standard Deduction Update'),
+          content: const SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(
+                  'With effect from FY 2024-25, under the new tax regime, the standard deduction is increased to Rs.75,000. There has been no change to the old tax regime with respect to the standard deduction. Thus, salaried taxpayers are eligible for the standard deduction of only Rs.50,000 under the old regime.',
+                ),
+                SizedBox(height: 16),
+                Text(
+                  'Purpose of Standard Deduction',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  '• Simplify tax filing by reducing paperwork and enabling deductions regardless of actual expenses.',
+                ),
+                Text(
+                  '• Offer tax relief specifically to middle-class salaried individuals.',
+                ),
+                Text(
+                  '• Extend benefits to pensioners through the standard deduction.',
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Close'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

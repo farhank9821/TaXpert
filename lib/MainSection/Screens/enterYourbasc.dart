@@ -29,11 +29,11 @@ class _EntryTimeScreenState extends State<EntryTimeScreen> {
     TextEditingController controller = TextEditingController();
     String selectedOption = 'Yes';
     return Scaffold(
-      backgroundColor: Color(0xff92B79F),
+      backgroundColor: const Color(0xff92B79F),
       appBar: AppBar(
-        backgroundColor: Color(0xff92B79F),
+        backgroundColor: const Color(0xff92B79F),
         elevation: 0,
-        title: Text(
+        title: const Text(
           'Enter Your Details',
           style: TextStyle(color: Color(0xffffffff)),
         ),
@@ -54,7 +54,7 @@ class _EntryTimeScreenState extends State<EntryTimeScreen> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  const Text(
                     ' Are you salaried ?',
                     style: TextStyle(fontSize: 18),
                   ),
@@ -64,7 +64,7 @@ class _EntryTimeScreenState extends State<EntryTimeScreen> {
                   Row(
                     children: [
                       Radio(
-                        activeColor: Color(0xff25472B),
+                        activeColor: const Color(0xff25472B),
                         value: 'Yes',
                         groupValue: selectedOption,
                         onChanged: (value) {
@@ -73,12 +73,12 @@ class _EntryTimeScreenState extends State<EntryTimeScreen> {
                           });
                         },
                       ),
-                      Text('Yes'),
+                      const Text('Yes'),
                       const SizedBox(
                         width: 60,
                       ),
                       Radio(
-                        activeColor: Color(0xff25472B),
+                        activeColor: const Color(0xff25472B),
                         value: 'No',
                         groupValue: selectedOption,
                         onChanged: (value) {
@@ -87,7 +87,7 @@ class _EntryTimeScreenState extends State<EntryTimeScreen> {
                           });
                         },
                       ),
-                      Text('No'),
+                      const Text('No'),
                     ],
                   ),
                 ],
@@ -102,7 +102,7 @@ class _EntryTimeScreenState extends State<EntryTimeScreen> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  const Text(
                     ' Residing in Metros?',
                     style: TextStyle(fontSize: 18),
                   ),
@@ -112,7 +112,7 @@ class _EntryTimeScreenState extends State<EntryTimeScreen> {
                   Row(
                     children: [
                       Radio(
-                        activeColor: Color(0xff25472B),
+                        activeColor: const Color(0xff25472B),
                         value: 'Yes',
                         groupValue: selectedOption,
                         onChanged: (value) {
@@ -121,12 +121,12 @@ class _EntryTimeScreenState extends State<EntryTimeScreen> {
                           });
                         },
                       ),
-                      Text('Yes'),
+                      const Text('Yes'),
                       const SizedBox(
                         width: 60,
                       ),
                       Radio(
-                        activeColor: Color(0xff25472B),
+                        activeColor: const Color(0xff25472B),
                         value: 'No',
                         groupValue: selectedOption,
                         onChanged: (value) {
@@ -135,7 +135,7 @@ class _EntryTimeScreenState extends State<EntryTimeScreen> {
                           });
                         },
                       ),
-                      Text('No'),
+                      const Text('No'),
                     ],
                   ),
                 ],
@@ -150,7 +150,7 @@ class _EntryTimeScreenState extends State<EntryTimeScreen> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  const Text(
                     'Gender',
                     style: TextStyle(fontSize: 18),
                   ),
@@ -160,7 +160,7 @@ class _EntryTimeScreenState extends State<EntryTimeScreen> {
                   Row(
                     children: [
                       Radio(
-                        activeColor: Color(0xff25472B),
+                        activeColor: const Color(0xff25472B),
                         value: 'Yes',
                         groupValue: selectedOption,
                         onChanged: (value) {
@@ -169,7 +169,7 @@ class _EntryTimeScreenState extends State<EntryTimeScreen> {
                           });
                         },
                       ),
-                      Text('Male'),
+                      const Text('Male'),
                       const SizedBox(
                         width: 60,
                       ),
@@ -182,7 +182,7 @@ class _EntryTimeScreenState extends State<EntryTimeScreen> {
                           });
                         },
                       ),
-                      Text('Female'),
+                      const Text('Female'),
                     ],
                   ),
                 ],
@@ -199,24 +199,24 @@ class _EntryTimeScreenState extends State<EntryTimeScreen> {
                 children: [
                   Row(
                     children: [
-                      Text(
+                      const Text(
                         'Date of Birth',
                         style: TextStyle(fontSize: 18),
                       ),
-                      IconButton(onPressed: _showDatePicker, icon: Icon(Icons.date_range))
+                      IconButton(onPressed: _showDatePicker, icon: const Icon(Icons.date_range))
                     ],
                   ),
-                  Text(
+                  const Text(
                     'Date of Birth: ',
                     style: TextStyle(fontSize: 18),
                   ),
                   Text(
                     '${_dateTime.day.toString()}/ ${_dateTime.month.toString()}/ ${_dateTime.year.toString()}',
-                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
+                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
                   )
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
               Padding(

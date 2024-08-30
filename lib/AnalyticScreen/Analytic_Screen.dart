@@ -1,4 +1,3 @@
-import 'package:cross_file/cross_file.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -13,55 +12,62 @@ import 'package:tax_xpert/model/userCalculationModel.dart';
 import 'package:tax_xpert/model/user_model.dart';
 
 class ReportGeneratorScreen extends ConsumerWidget {
-  const ReportGeneratorScreen({super.key});
+  const ReportGeneratorScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userProvider);
     final taxCalc = ref.watch(taxCalculationProvider);
+
+    // Null checks and default values
+    final grossIncome = taxCalc.grossIncome ?? 0.0;
+    final rentalIncome = user.rentalIncome ?? 0.0;
+    final netTaxPayableNew = taxCalc.netTaxPayableNew ?? 0.0;
+    final totalDeductionNew = taxCalc.totalDeductionNew ?? 0.0;
+
     return Scaffold(
       body: Column(
         children: [
           Expanded(
-            child: SizedBox(
-              child: PieChart(
-                PieChartData(
-                  sections: [
-                    PieChartSectionData(
-                      color: Colors.blue,
-                      value: taxCalc.grossIncome,
-                      title: taxCalc.grossIncome! > 0 ? '${taxCalc.grossIncome}' : '',
-                      titlePositionPercentageOffset: 0.55, // Move title slightly outward
-                      radius: taxCalc.grossIncome! > 0 ? 50 : 0, // Adjust size based on value
+            child: taxCalc.grossIncome! > 0
+                ? PieChart(
+                    PieChartData(
+                      sections: [
+                        PieChartSectionData(
+                          color: Colors.blue,
+                          value: grossIncome,
+                          title: grossIncome > 0 ? grossIncome.toStringAsFixed(2) : '',
+                          titlePositionPercentageOffset: 0.55,
+                          radius: grossIncome > 0 ? 50 : 0,
+                        ),
+                        PieChartSectionData(
+                          color: Colors.red,
+                          value: rentalIncome,
+                          title: rentalIncome > 0 ? '${rentalIncome.toStringAsFixed(2)}%' : '',
+                          titlePositionPercentageOffset: 0.55,
+                          radius: rentalIncome > 0 ? 50 : 0,
+                        ),
+                        PieChartSectionData(
+                          color: Colors.green,
+                          value: netTaxPayableNew,
+                          title: netTaxPayableNew > 0 ? netTaxPayableNew.toStringAsFixed(2) : '',
+                          titlePositionPercentageOffset: 0.55,
+                          radius: netTaxPayableNew > 0 ? 50 : 0,
+                        ),
+                        PieChartSectionData(
+                          color: Colors.orange,
+                          value: totalDeductionNew,
+                          title: totalDeductionNew > 0 ? totalDeductionNew.toStringAsFixed(2) : '',
+                          titlePositionPercentageOffset: 0.55,
+                          radius: totalDeductionNew > 0 ? 50 : 0,
+                        ),
+                      ],
+                      borderData: FlBorderData(show: false),
+                      centerSpaceRadius: 60,
+                      sectionsSpace: 2,
                     ),
-                    PieChartSectionData(
-                      color: Colors.red,
-                      value: user.rentalIncome,
-                      title: user.rentalIncome! > 0 ? '${user.rentalIncome}%' : '',
-                      titlePositionPercentageOffset: 0.55,
-                      radius: user.rentalIncome! > 0 ? 50 : 0,
-                    ),
-                    PieChartSectionData(
-                      color: Colors.green,
-                      value: taxCalc.netTaxPayableNew,
-                      title: taxCalc.netTaxPayableNew! > 0 ? '${taxCalc.netTaxPayableNew}' : '',
-                      titlePositionPercentageOffset: 0.55,
-                      radius: taxCalc.netTaxPayableNew! > 0 ? 50 : 0,
-                    ),
-                    PieChartSectionData(
-                      color: Colors.orange,
-                      value: taxCalc.totalDeductionNew,
-                      title: taxCalc.totalDeductionNew! > 0 ? '${taxCalc.totalDeductionNew}' : '',
-                      titlePositionPercentageOffset: 0.55,
-                      radius: taxCalc.totalDeductionNew! > 0 ? 50 : 0,
-                    ),
-                  ],
-                  borderData: FlBorderData(show: false),
-                  centerSpaceRadius: 60,
-                  sectionsSpace: 2, // Increase space between sections
-                ),
-              ),
-            ),
+                  )
+                : Container(),
           ),
           Center(
             child: ElevatedButton(
@@ -75,8 +81,8 @@ class ReportGeneratorScreen extends ConsumerWidget {
   }
 
   Future<void> _generateAndSharePDF(BuildContext context, WidgetRef ref) async {
-    final user = ref.watch(userProvider);
-    final taxCalc = ref.watch(taxCalculationProvider);
+    final user = ref.read(userProvider);
+    final taxCalc = ref.read(taxCalculationProvider);
 
     final pdf = pw.Document();
 
@@ -114,19 +120,19 @@ class ReportGeneratorScreen extends ConsumerWidget {
         ]),
         pw.TableRow(children: [
           pw.Text('Salary'),
-          pw.Text('${user.salary}'),
+          pw.Text('${user.salary?.toStringAsFixed(2) ?? 'N/A'}'),
         ]),
         pw.TableRow(children: [
           pw.Text('Income from Interest'),
-          pw.Text('${user.incomeFromInterest}'),
+          pw.Text('${user.incomeFromInterest?.toStringAsFixed(2) ?? 'N/A'}'),
         ]),
         pw.TableRow(children: [
           pw.Text('Rental Income'),
-          pw.Text('${user.rentalIncome}'),
+          pw.Text('${user.rentalIncome?.toStringAsFixed(2) ?? 'N/A'}'),
         ]),
         pw.TableRow(children: [
           pw.Text('Income from Other Sources'),
-          pw.Text('${user.incomeFromOtherSources}'),
+          pw.Text('${user.incomeFromOtherSources?.toStringAsFixed(2) ?? 'N/A'}'),
         ]),
       ],
     );
@@ -143,33 +149,33 @@ class ReportGeneratorScreen extends ConsumerWidget {
         ]),
         pw.TableRow(children: [
           pw.Text('Gross Income'),
-          pw.Text('${taxCalc.grossIncome}'),
-          pw.Text('${taxCalc.grossIncome}'),
+          pw.Text('${taxCalc.grossIncome?.toStringAsFixed(2) ?? 'N/A'}'),
+          pw.Text('${taxCalc.grossIncome?.toStringAsFixed(2) ?? 'N/A'}'),
         ]),
         pw.TableRow(children: [
           pw.Text('Total Deduction'),
-          pw.Text('${taxCalc.totalDeductionNew}'),
-          pw.Text('${taxCalc.totalDeductionOld}'),
+          pw.Text('${taxCalc.totalDeductionNew?.toStringAsFixed(2) ?? 'N/A'}'),
+          pw.Text('${taxCalc.totalDeductionOld?.toStringAsFixed(2) ?? 'N/A'}'),
         ]),
         pw.TableRow(children: [
           pw.Text('Taxable Income'),
-          pw.Text('${taxCalc.taxableIncomeNew}'),
-          pw.Text('${taxCalc.taxableIncomeOld}'),
+          pw.Text('${taxCalc.taxableIncomeNew?.toStringAsFixed(2) ?? 'N/A'}'),
+          pw.Text('${taxCalc.taxableIncomeOld?.toStringAsFixed(2) ?? 'N/A'}'),
         ]),
         pw.TableRow(children: [
           pw.Text('Tax Payable'),
-          pw.Text('${taxCalc.taxPayableNew}'),
-          pw.Text('${taxCalc.taxPayableOld}'),
+          pw.Text('${taxCalc.taxPayableNew?.toStringAsFixed(2) ?? 'N/A'}'),
+          pw.Text('${taxCalc.taxPayableOld?.toStringAsFixed(2) ?? 'N/A'}'),
         ]),
         pw.TableRow(children: [
           pw.Text('Taxes Already Paid'),
-          pw.Text('${taxCalc.taxesAlreadyPaidNew}'),
-          pw.Text('${taxCalc.taxesAlreadyPaidOld}'),
+          pw.Text('${taxCalc.taxesAlreadyPaidNew?.toStringAsFixed(2) ?? 'N/A'}'),
+          pw.Text('${taxCalc.taxesAlreadyPaidOld?.toStringAsFixed(2) ?? 'N/A'}'),
         ]),
         pw.TableRow(children: [
           pw.Text('Net Tax Payable'),
-          pw.Text('${taxCalc.netTaxPayableNew}'),
-          pw.Text('${taxCalc.netTaxPayableOld}'),
+          pw.Text('${taxCalc.netTaxPayableNew?.toStringAsFixed(2) ?? 'N/A'}'),
+          pw.Text('${taxCalc.netTaxPayableOld?.toStringAsFixed(2) ?? 'N/A'}'),
         ]),
       ],
     );
@@ -180,15 +186,15 @@ class ReportGeneratorScreen extends ConsumerWidget {
       crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: [
         pw.Text('Deductions:'),
-        pw.Text('Life Insurance: ${user.lifeInsurance}'),
-        pw.Text('Provident Fund: ${user.providentFund}'),
-        pw.Text('Tuition Fees: ${user.tuitionFees}'),
-        pw.Text('Health Insurance: ${user.healthInsurance}'),
+        pw.Text('Life Insurance: ${user.lifeInsurance?.toStringAsFixed(2) ?? 'N/A'}'),
+        pw.Text('Provident Fund: ${user.providentFund?.toStringAsFixed(2) ?? 'N/A'}'),
+        pw.Text('Tuition Fees: ${user.tuitionFees?.toStringAsFixed(2) ?? 'N/A'}'),
+        pw.Text('Health Insurance: ${user.healthInsurance?.toStringAsFixed(2) ?? 'N/A'}'),
         pw.SizedBox(height: 10),
         pw.Text('Other Details:'),
-        pw.Text('TDS: ${user.tds}'),
-        pw.Text('Advance Tax: ${user.advanceTax}'),
-        pw.Text('Self Assessment Tax: ${user.self_assessment_tax}'),
+        pw.Text('TDS: ${user.tds?.toStringAsFixed(2) ?? 'N/A'}'),
+        pw.Text('Advance Tax: ${user.advanceTax?.toStringAsFixed(2) ?? 'N/A'}'),
+        pw.Text('Self Assessment Tax: ${user.self_assessment_tax?.toStringAsFixed(2) ?? 'N/A'}'),
       ],
     );
   }

@@ -1,23 +1,49 @@
 import 'dart:convert';
+import 'package:hive/hive.dart';
 
+part 'userCalculationModel.g.dart';
+
+@HiveType(typeId: 2)
 class UserTaxCalculation {
-  // New Tax Regime fields
+  @HiveField(0)
   double? grossIncome = 0.0;
+
+  @HiveField(1)
   double? totalDeductionNew = 0.0;
+
+  @HiveField(2)
   double? taxableIncomeNew = 0.0;
+
+  @HiveField(3)
   double? taxPayableNew = 0.0;
+
+  @HiveField(4)
   double? taxesAlreadyPaidNew = 0.0;
+
+  @HiveField(5)
   double? netTaxPayableNew = 0.0;
+
+  @HiveField(6)
   double? standardDeductionNew = 75000.0;
 
   // Old Tax Regime fields
+  @HiveField(7)
   double? standardDeductionOld = 50000.0;
-  double? totalDeductionOld = 0.0;
-  double? taxableIncomeOld = 0.0;
-  double? taxPayableOld = 0.0;
-  double? taxesAlreadyPaidOld = 0.0;
-  double? netTaxPayableOld = 0.0;
 
+  @HiveField(8)
+  double? totalDeductionOld = 0.0;
+
+  @HiveField(9)
+  double? taxableIncomeOld = 0.0;
+
+  @HiveField(10)
+  double? taxPayableOld = 0.0;
+
+  @HiveField(11)
+  double? taxesAlreadyPaidOld = 0.0;
+
+  @HiveField(12)
+  double? netTaxPayableOld = 0.0;
   UserTaxCalculation({
     this.grossIncome,
     this.totalDeductionNew,

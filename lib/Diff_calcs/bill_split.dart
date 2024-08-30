@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:math_expressions/math_expressions.dart';
 
 class BillSplitterPage extends StatefulWidget {
-  const BillSplitterPage({super.key});
+  const BillSplitterPage({Key? key}) : super(key: key);
 
   @override
   _BillSplitterPageState createState() => _BillSplitterPageState();
@@ -37,19 +37,18 @@ class _BillSplitterPageState extends State<BillSplitterPage> {
   }
 
   void calculateSplit() {
-    double totalBill = 0;
-    for (var friend in friends) {
+    double totalBill = friends.fold(0, (sum, friend) {
       friend.amount = evaluateExpression(friend.expression);
-      totalBill += friend.amount;
-    }
+      return sum + friend.amount;
+    });
 
     double tax = totalBill * 0.05; // CGST (2.5%) + SGST (2.5%)
-    double tip = totalBill * (tipPercentage / 100);
-    double grandTotal = totalBill + tax + tip;
+    double discount = totalBill * (tipPercentage / 100);
+    double grandTotal = totalBill + tax - discount;
 
     for (var friend in friends) {
       double friendShare = friend.amount / totalBill;
-      friend.splitAmount = friend.amount + (tax * friendShare) + (tip * friendShare);
+      friend.splitAmount = friend.amount + (tax * friendShare) + (discount * friendShare);
     }
 
     setState(() {
@@ -74,7 +73,10 @@ class _BillSplitterPageState extends State<BillSplitterPage> {
             ),
             const SizedBox(height: 16),
             TextField(
-              decoration: const InputDecoration(labelText: 'Tip Percentage'),
+              decoration: const InputDecoration(
+                labelText: 'Tip Percentage',
+                border: OutlineInputBorder(),
+              ),
               keyboardType: TextInputType.number,
               onChanged: (value) {
                 tipPercentage = double.tryParse(value) ?? 10;
@@ -84,36 +86,53 @@ class _BillSplitterPageState extends State<BillSplitterPage> {
             ...friends.asMap().entries.map((entry) {
               int index = entry.key;
               Friend friend = entry.value;
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 8),
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        decoration: InputDecoration(labelText: 'Friend ${index + 1} Name'),
+              return Card(
+                margin: const EdgeInsets.only(bottom: 16),
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              'Friend ${index + 1}',
+                              style: Theme.of(context).textTheme.titleMedium,
+                            ),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.delete),
+                            onPressed: () => removeFriend(index),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      TextField(
+                        decoration: const InputDecoration(
+                          labelText: 'Name',
+                          border: OutlineInputBorder(),
+                        ),
                         onChanged: (value) {
                           setState(() {
                             friend.name = value;
                           });
                         },
                       ),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: TextField(
-                        decoration: const InputDecoration(labelText: 'Items (e.g., 234.54+32.09)'),
+                      const SizedBox(height: 8),
+                      TextField(
+                        decoration: const InputDecoration(
+                          labelText: 'Items (e.g., 234.54+32.09)',
+                          border: OutlineInputBorder(),
+                        ),
                         onChanged: (value) {
                           setState(() {
                             friend.expression = value;
                           });
                         },
                       ),
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.delete),
-                      onPressed: () => removeFriend(index),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               );
             }).toList(),
@@ -124,20 +143,34 @@ class _BillSplitterPageState extends State<BillSplitterPage> {
             ),
             if (showSplit) ...[
               const SizedBox(height: 16),
-              const Text('Split Result:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              ...friends
-                  .map((friend) => Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 4),
-                        child: Text('${friend.name}: \$${friend.splitAmount.toStringAsFixed(2)} (Items: \$${friend.amount.toStringAsFixed(2)})'),
-                      ))
-                  .toList(),
-              TextButton(
-                onPressed: () {
-                  setState(() {
-                    showSplit = false;
-                  });
-                },
-                child: const Text('Close Split'),
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Split Result:',
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 8),
+                      ...friends.map((friend) => Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 4),
+                            child: Text(
+                              '${friend.name}: \$${friend.splitAmount.toStringAsFixed(2)} (Items: \$${friend.amount.toStringAsFixed(2)})',
+                            ),
+                          )),
+                      TextButton(
+                        onPressed: () {
+                          setState(() {
+                            showSplit = false;
+                          });
+                        },
+                        child: const Text('Close Split'),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ],
           ],

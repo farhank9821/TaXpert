@@ -1,9 +1,7 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 import 'package:tax_xpert/Login_screen/widgets/textformfield.dart';
 import 'package:tax_xpert/Repo/auth_repo.dart';
 import 'package:tax_xpert/Repo/userbasicInfoRepo.dart';
@@ -28,11 +26,11 @@ class _SignupState extends ConsumerState<Signup> {
   void initState() {
     super.initState();
     final userInfo = ref.read(userBasicProvider);
-    _nameController = TextEditingController(text: userInfo.name);
-    _ageController = TextEditingController(text: userInfo.age.toString());
-    _emailController = TextEditingController(text: userInfo.email ?? '-');
-    _phoneController = TextEditingController(text: userInfo.phoneNo ?? '-');
-    _addressController = TextEditingController(text: userInfo.address ?? '-');
+    _nameController = TextEditingController();
+    _ageController = TextEditingController();
+    _emailController = TextEditingController();
+    _phoneController = TextEditingController();
+    _addressController = TextEditingController();
   }
 
   @override
@@ -64,78 +62,126 @@ class _SignupState extends ConsumerState<Signup> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Form(
-        key: _formKey,
-        child: ListView(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 10.0),
-              child: Text(
-                "Welcome",
-                style: GoogleFonts.exo(fontWeight: FontWeight.w800, fontSize: 40),
+    return SafeArea(
+      child: Scaffold(
+        body: CustomScrollView(
+          slivers: <Widget>[
+            SliverAppBar(
+              expandedHeight: 100.0, // Increased for more space
+              floating: false,
+              pinned: true,
+              backgroundColor: Colors.black,
+              flexibleSpace: LayoutBuilder(
+                builder: (BuildContext context, BoxConstraints constraints) {
+                  var top = constraints.biggest.height;
+                  var collapsedHeight = MediaQuery.of(context).padding.top + kToolbarHeight;
+                  var expandedHeight = 200.0; // Should match expandedHeight above
+                  var t = ((top - collapsedHeight) / (expandedHeight - collapsedHeight)).clamp(0.0, 1.0);
+
+                  return FlexibleSpaceBar(
+                    centerTitle: false,
+                    titlePadding: const EdgeInsets.only(
+                      left: 16,
+                    ),
+                    title: Opacity(
+                      opacity: 1.0, // Always visible
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Welcome",
+                            style: Theme.of(context).textTheme.displayLarge?.copyWith(
+                                  fontSize: 24 + (t * 8), // Scales from 24 to 32
+                                  color: Colors.white,
+                                ),
+                          ),
+                          SizedBox(height: 4 * t), // Dynamic spacing
+                          Text(
+                            "Add your details !",
+                            style: Theme.of(context).textTheme.displayMedium?.copyWith(
+                                  fontSize: 16 + (t * 4), // Scales from 16 to 20
+                                  color: Colors.white,
+                                ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
               ),
             ),
-            const SizedBox(height: 5),
-            Padding(
-              padding: const EdgeInsets.only(left: 14.0),
-              child: Text(
-                "Add your details!",
-                style: GoogleFonts.exo(fontWeight: FontWeight.w400, fontSize: 20),
-              ),
-            ),
-            const SizedBox(height: 50),
-            TextFormWidget(
-              type: TextInputType.name,
-              icon: const Icon(Icons.person),
-              hintText: "Name",
-              controller: _nameController,
-              label: "Enter your Name",
-              onChange: (value) {},
-            ),
-            GestureDetector(
-              onTap: () => _selectDate(context),
-              child: AbsorbPointer(
-                child: TextFormWidget(
-                  type: TextInputType.number,
-                  icon: const Icon(Icons.calendar_today),
-                  hintText: "23",
-                  controller: _ageController,
-                  label: "Enter your Age",
-                  onChange: (value) {},
+            SliverList(
+              delegate: SliverChildListDelegate([
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(30.0),
+                          child: Lottie.asset('assets/login_screen.json'),
+                        ),
+                        TextFormWidget(
+                          type: TextInputType.name,
+                          icon: const Icon(Icons.person),
+                          hintText: "Name",
+                          controller: _nameController,
+                          label: "Enter your Name",
+                          onChange: (value) {},
+                        ),
+                        GestureDetector(
+                          onTap: () => _selectDate(context),
+                          child: AbsorbPointer(
+                            child: TextFormWidget(
+                              type: TextInputType.number,
+                              icon: const Icon(Icons.calendar_today),
+                              hintText: "23",
+                              controller: _ageController,
+                              label: "Enter your Age",
+                              onChange: (value) {},
+                            ),
+                          ),
+                        ),
+                        TextFormWidget(
+                          type: TextInputType.emailAddress,
+                          icon: const Icon(Icons.email),
+                          hintText: "abc@gmail.com",
+                          controller: _emailController,
+                          label: "Enter your Email",
+                          onChange: (value) {},
+                        ),
+                        TextFormWidget(
+                          type: TextInputType.phone,
+                          icon: const Icon(Icons.phone),
+                          hintText: "xxxxx xxxxx",
+                          controller: _phoneController,
+                          label: "Enter your Phone Number",
+                          onChange: (value) {},
+                        ),
+                        TextFormWidget(
+                          type: TextInputType.streetAddress,
+                          icon: const Icon(Icons.home),
+                          hintText: "x/xxx xxxxxxx xxxxxxx",
+                          controller: _addressController,
+                          label: "Enter your Address",
+                          onChange: (value) {},
+                        ),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Theme.of(context).colorScheme.secondary,
+                          ),
+                          onPressed: _handleSubmit,
+                          child:
+                              Text("Update", style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Theme.of(context).colorScheme.surface)),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            TextFormWidget(
-              type: TextInputType.emailAddress,
-              icon: const Icon(Icons.email),
-              hintText: "abc@gmail.com",
-              controller: _emailController,
-              label: "Enter your Email",
-              onChange: (value) {},
-            ),
-            TextFormWidget(
-              type: TextInputType.phone,
-              icon: const Icon(Icons.phone),
-              hintText: "xxxxx xxxxx",
-              controller: _phoneController,
-              label: "Enter your Phone Number",
-              onChange: (value) {},
-            ),
-            TextFormWidget(
-              type: TextInputType.streetAddress,
-              icon: const Icon(Icons.home),
-              hintText: "x/xxx xxxxxxx xxxxxxx",
-              controller: _addressController,
-              label: "Enter your Address",
-              onChange: (value) {},
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Theme.of(context).colorScheme.primary,
-              ),
-              onPressed: _handleSubmit,
-              child: Text("Update", style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Theme.of(context).colorScheme.surface)),
+              ]),
             ),
           ],
         ),
@@ -148,20 +194,18 @@ class _SignupState extends ConsumerState<Signup> {
       final userBasic = ref.read(userBasicProvider.notifier);
       await userBasic.updateUserBasicInfo(
         name: _nameController.text,
-        age: int.tryParse(_ageController.text),
+        age: int.tryParse(_ageController.text) ?? 0,
         address: _addressController.text,
         phone: _phoneController.text,
         email: _emailController.text,
       );
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('User information updated successfully!')),
+        const SnackBar(
+          content: Text('User information updated successfully!'),
+        ),
       );
       await ref.read(authStateProvider.notifier).setLoggedIn(true);
       context.go('/tax-form');
-      // Navigator.pushReplacement(
-      //   context,
-      //   MaterialPageRoute(builder: (context) => const TaxDeductionForm()), // Adjust based on actual target screen
-      // );
     }
   }
 }

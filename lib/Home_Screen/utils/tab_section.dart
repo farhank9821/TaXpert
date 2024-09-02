@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:tax_xpert/Repo/UserCalculationRepo.dart';
 import 'package:tax_xpert/Repo/userModelRepo.dart';
 import 'package:tax_xpert/model/user_model.dart';
+import 'package:tax_xpert/utils/number_to_words.dart';
 
 class CustomTabScreen extends ConsumerStatefulWidget {
   const CustomTabScreen({super.key});
@@ -92,6 +93,8 @@ class _CustomTabScreenState extends ConsumerState<CustomTabScreen> with SingleTi
     _advance_Tax_Controller.text = formatDoubleToCurrency(val.advanceTax ?? 0.0);
     _self_assement_Controller.text = formatDoubleToCurrency(val.self_assessment_tax ?? 0.0);
   }
+
+  final NumberToWordsConverter _converter = NumberToWordsConverter(); // Instantiate the class
 
   @override
   void dispose() {
@@ -422,7 +425,11 @@ class _CustomTabScreenState extends ConsumerState<CustomTabScreen> with SingleTi
               selection: TextSelection.collapsed(offset: formattedValue.length),
             );
           }
+          int val = int.parse(controller.text.replaceAll(',', ''));
 
+          setState(() {
+            label = _converter.numberToWords(val); // Use the class method
+          });
           onChange(parsedValue);
 
           // Recalculate tax

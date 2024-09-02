@@ -32,7 +32,7 @@ class TextFormWidget extends StatelessWidget {
             labelText: label,
             labelStyle: theme.textTheme.titleSmall!.copyWith(color: theme.colorScheme.primary),
             filled: true,
-            fillColor: Colors.transparent,
+            fillColor: theme.colorScheme.onTertiary,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.0),
             ),
@@ -41,7 +41,7 @@ class TextFormWidget extends StatelessWidget {
               borderSide: BorderSide(color: theme.colorScheme.primaryContainer, width: 2.0),
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12.0),
+              borderRadius: BorderRadius.circular(15.0),
               borderSide: const BorderSide(color: Colors.grey, width: 1.0),
             ),
             prefixIcon: icon, // Add icon to InputDecoration

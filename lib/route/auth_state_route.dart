@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:tax_xpert/Login_screen/loginScreen.dart';
 import 'package:tax_xpert/Repo/auth_repo.dart';
 
-import '../MainSection/navigationbarScreen.dart';
+import '../navigationbarScreen.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   final authState = ref.watch(authStateProvider);

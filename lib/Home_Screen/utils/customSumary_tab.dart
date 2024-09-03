@@ -70,7 +70,7 @@ class _HomeSummaryState extends ConsumerState<HomeSummary> with SingleTickerProv
           ),
         ),
         SizedBox(
-          height: MediaQuery.of(context).size.height * 0.6,
+          height: MediaQuery.of(context).size.height * 0.55,
           child: TabBarView(
             controller: _tabController,
             children: const [NewRegime(), OldRegime()],

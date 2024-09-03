@@ -66,7 +66,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           child: Image.asset('assets/loss.png'),
                         ),
                       const SizedBox(width: 8.0), // Adjust spacing between avatar and text
-                      Text(taxCalculation.differenceBetween.toString(), style: Theme.of(context).textTheme.displaySmall),
+                      Text(taxCalculation.differenceBetween!.toStringAsFixed(2), style: Theme.of(context).textTheme.displaySmall),
                     ],
                   ),
                 ),

@@ -40,31 +40,37 @@ class _HomeSummaryState extends ConsumerState<HomeSummary> with SingleTickerProv
               topRight: Radius.circular(15.0),
             ),
           ),
-          child: TabBar(
-            controller: _tabController,
-            indicator: BoxDecoration(
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(15.0),
-                  topRight: Radius.circular(15.0),
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: TabBar(
+              controller: _tabController,
+              indicator: BoxDecoration(
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(15.0),
+                    topRight: Radius.circular(15.0),
+                    bottomLeft: Radius.circular(15.0),
+                    bottomRight: Radius.circular(15.0),
+                  ),
+                  color: theme.colorScheme.onTertiary,
+                  shape: BoxShape.rectangle),
+              labelColor: Colors.white,
+              unselectedLabelColor: Colors.black,
+              labelStyle: Theme.of(context).textTheme.titleMedium!.copyWith(fontSize: 15),
+              tabs: const [
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 1),
+                  child: Tab(text: 'New Regime'),
                 ),
-                color: theme.colorScheme.onTertiary,
-                shape: BoxShape.rectangle),
-            labelColor: Colors.white,
-            unselectedLabelColor: Colors.black,
-            tabs: const [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 1),
-                child: Tab(text: 'New Regime'),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 1),
-                child: Tab(text: 'Old Regime'),
-              ),
-            ],
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 1),
+                  child: Tab(text: 'Old Regime'),
+                ),
+              ],
+            ),
           ),
         ),
         SizedBox(
-          height: MediaQuery.of(context).size.height * 0.45,
+          height: MediaQuery.of(context).size.height * 0.6,
           child: TabBarView(
             controller: _tabController,
             children: const [NewRegime(), OldRegime()],

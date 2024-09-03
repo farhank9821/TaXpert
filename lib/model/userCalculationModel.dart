@@ -44,6 +44,10 @@ class UserTaxCalculation {
 
   @HiveField(12)
   double? netTaxPayableOld = 0.0;
+
+  @HiveField(13)
+  double? differenceBetween = 0.0;
+
   UserTaxCalculation({
     this.grossIncome,
     this.totalDeductionNew,
@@ -58,6 +62,7 @@ class UserTaxCalculation {
     this.taxPayableOld,
     this.taxesAlreadyPaidOld,
     this.netTaxPayableOld,
+    this.differenceBetween,
   });
 
   UserTaxCalculation copyWith({
@@ -74,6 +79,7 @@ class UserTaxCalculation {
     double? taxPayableOld,
     double? taxesAlreadyPaidOld,
     double? netTaxPayableOld,
+    double? differenceBetween,
   }) {
     return UserTaxCalculation(
       grossIncome: grossIncome ?? this.grossIncome,
@@ -89,6 +95,7 @@ class UserTaxCalculation {
       taxPayableOld: taxPayableOld ?? this.taxPayableOld,
       taxesAlreadyPaidOld: taxesAlreadyPaidOld ?? this.taxesAlreadyPaidOld,
       netTaxPayableOld: netTaxPayableOld ?? this.netTaxPayableOld,
+      differenceBetween: differenceBetween ?? this.differenceBetween,
     );
   }
 
@@ -107,25 +114,26 @@ class UserTaxCalculation {
       'taxPayableOld': taxPayableOld,
       'taxesAlreadyPaidOld': taxesAlreadyPaidOld,
       'netTaxPayableOld': netTaxPayableOld,
+      'differenceBetween': differenceBetween
     };
   }
 
   factory UserTaxCalculation.fromMap(Map<String, dynamic> map) {
     return UserTaxCalculation(
-      grossIncome: map['grossIncome'] as double,
-      totalDeductionNew: map['totalDeductionNew'] as double,
-      taxableIncomeNew: map['taxableIncomeNew'] as double,
-      taxPayableNew: map['taxPayableNew'] as double,
-      taxesAlreadyPaidNew: map['taxesAlreadyPaidNew'] as double,
-      netTaxPayableNew: map['netTaxPayableNew'] as double,
-      standardDeductionNew: map['standardDeductionNew'] as double,
-      standardDeductionOld: map['standardDeductionOld'] as double,
-      totalDeductionOld: map['totalDeductionOld'] as double,
-      taxableIncomeOld: map['taxableIncomeOld'] as double,
-      taxPayableOld: map['taxPayableOld'] as double,
-      taxesAlreadyPaidOld: map['taxesAlreadyPaidOld'] as double,
-      netTaxPayableOld: map['netTaxPayableOld'] as double,
-    );
+        grossIncome: map['grossIncome'] as double,
+        totalDeductionNew: map['totalDeductionNew'] as double,
+        taxableIncomeNew: map['taxableIncomeNew'] as double,
+        taxPayableNew: map['taxPayableNew'] as double,
+        taxesAlreadyPaidNew: map['taxesAlreadyPaidNew'] as double,
+        netTaxPayableNew: map['netTaxPayableNew'] as double,
+        standardDeductionNew: map['standardDeductionNew'] as double,
+        standardDeductionOld: map['standardDeductionOld'] as double,
+        totalDeductionOld: map['totalDeductionOld'] as double,
+        taxableIncomeOld: map['taxableIncomeOld'] as double,
+        taxPayableOld: map['taxPayableOld'] as double,
+        taxesAlreadyPaidOld: map['taxesAlreadyPaidOld'] as double,
+        netTaxPayableOld: map['netTaxPayableOld'] as double,
+        differenceBetween: map['differenceBetween'] as double);
   }
 
   String toJson() => json.encode(toMap());
@@ -134,7 +142,7 @@ class UserTaxCalculation {
 
   @override
   String toString() {
-    return 'UserTaxCalculation(grossIncome: $grossIncome, totalDeductionNew: $totalDeductionNew, taxableIncomeNew: $taxableIncomeNew, taxPayableNew: $taxPayableNew, taxesAlreadyPaidNew: $taxesAlreadyPaidNew, netTaxPayableNew: $netTaxPayableNew, standardDeductionNew: $standardDeductionNew, standardDeductionOld: $standardDeductionOld, totalDeductionOld: $totalDeductionOld, taxableIncomeOld: $taxableIncomeOld, taxPayableOld: $taxPayableOld, taxesAlreadyPaidOld: $taxesAlreadyPaidOld, netTaxPayableOld: $netTaxPayableOld)';
+    return 'UserTaxCalculation(grossIncome: $grossIncome, totalDeductionNew: $totalDeductionNew, taxableIncomeNew: $taxableIncomeNew, taxPayableNew: $taxPayableNew, taxesAlreadyPaidNew: $taxesAlreadyPaidNew, netTaxPayableNew: $netTaxPayableNew, standardDeductionNew: $standardDeductionNew, standardDeductionOld: $standardDeductionOld, totalDeductionOld: $totalDeductionOld, taxableIncomeOld: $taxableIncomeOld, taxPayableOld: $taxPayableOld, taxesAlreadyPaidOld: $taxesAlreadyPaidOld, netTaxPayableOld: $netTaxPayableOld , differenceBetween: $differenceBetween)';
   }
 
   @override
@@ -153,7 +161,8 @@ class UserTaxCalculation {
         other.taxableIncomeOld == taxableIncomeOld &&
         other.taxPayableOld == taxPayableOld &&
         other.taxesAlreadyPaidOld == taxesAlreadyPaidOld &&
-        other.netTaxPayableOld == netTaxPayableOld;
+        other.netTaxPayableOld == netTaxPayableOld &&
+        other.differenceBetween == differenceBetween;
   }
 
   @override
@@ -170,6 +179,7 @@ class UserTaxCalculation {
         taxableIncomeOld.hashCode ^
         taxPayableOld.hashCode ^
         taxesAlreadyPaidOld.hashCode ^
-        netTaxPayableOld.hashCode;
+        netTaxPayableOld.hashCode ^
+        differenceBetween.hashCode;
   }
 }

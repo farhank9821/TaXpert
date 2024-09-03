@@ -37,8 +37,8 @@ class LogoNameContainer extends StatelessWidget {
             children: [
               Image(
                 image: image,
-                width: 30.0,
-                height: 30.0,
+                width: 35.0,
+                height: 35.0,
                 fit: BoxFit.cover,
               ),
               const SizedBox(width: 16.0),

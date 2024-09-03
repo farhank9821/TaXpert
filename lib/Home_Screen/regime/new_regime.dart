@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:tax_xpert/Repo/UserCalculationRepo.dart';
 import 'package:tax_xpert/model/userCalculationModel.dart';
 
@@ -17,6 +18,11 @@ class _NewRegimeState extends ConsumerState<NewRegime> {
   void initState() {
     super.initState();
     _taxCalculation = ref.read(taxCalculationProvider);
+  }
+
+  String formatDoubleToCurrency(double number) {
+    NumberFormat formatter = NumberFormat("#,##,##0", "en_IN");
+    return formatter.format(number);
   }
 
   @override
@@ -77,7 +83,7 @@ class _NewRegimeState extends ConsumerState<NewRegime> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text('Net Tax payable', style: Theme.of(context).textTheme.titleSmall),
-              Text('₹${(_taxCalculation.netTaxPayableNew ?? 0).toStringAsFixed(2)}', style: Theme.of(context).textTheme.displaySmall),
+              Text('₹ ${(formatDoubleToCurrency(_taxCalculation.netTaxPayableNew ?? 0))}', style: Theme.of(context).textTheme.titleMedium),
             ],
           ),
         ],
@@ -142,7 +148,7 @@ class _NewRegimeState extends ConsumerState<NewRegime> {
                   style: Theme.of(context).textTheme.titleMedium!.copyWith(fontSize: 12),
                 ),
                 Text(
-                  '₹ ${value.toStringAsFixed(2)}',
+                  '₹ ${formatDoubleToCurrency(value)}',
                   style: Theme.of(context).textTheme.titleMedium!.copyWith(fontSize: 16),
                 ),
               ],

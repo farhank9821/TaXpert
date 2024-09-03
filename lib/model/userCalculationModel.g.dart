@@ -30,13 +30,14 @@ class UserTaxCalculationAdapter extends TypeAdapter<UserTaxCalculation> {
       taxPayableOld: fields[10] as double?,
       taxesAlreadyPaidOld: fields[11] as double?,
       netTaxPayableOld: fields[12] as double?,
+      differenceBetween: fields[13] as double?,
     );
   }
 
   @override
   void write(BinaryWriter writer, UserTaxCalculation obj) {
     writer
-      ..writeByte(13)
+      ..writeByte(14)
       ..writeByte(0)
       ..write(obj.grossIncome)
       ..writeByte(1)
@@ -62,7 +63,9 @@ class UserTaxCalculationAdapter extends TypeAdapter<UserTaxCalculation> {
       ..writeByte(11)
       ..write(obj.taxesAlreadyPaidOld)
       ..writeByte(12)
-      ..write(obj.netTaxPayableOld);
+      ..write(obj.netTaxPayableOld)
+      ..writeByte(13)
+      ..write(obj.differenceBetween);
   }
 
   @override

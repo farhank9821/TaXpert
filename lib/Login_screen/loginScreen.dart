@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -204,8 +206,10 @@ class _SignupState extends ConsumerState<Signup> {
           content: Text('User information updated successfully!'),
         ),
       );
+
       await ref.read(authStateProvider.notifier).setLoggedIn(true);
-      context.go('/tax-form');
+      await ref.read(authStateProvider.notifier).setNewUser(false);
+      context.go('/');
     }
   }
 }

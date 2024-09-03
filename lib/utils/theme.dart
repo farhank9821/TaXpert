@@ -2,16 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 final TextTheme myTextTheme = TextTheme(
-  displayLarge: GoogleFonts.nunito(fontSize: 32, color: const Color(0xFFFFFFFF), fontWeight: FontWeight.bold), // textColor
-  displayMedium: GoogleFonts.nunito(fontSize: 24, color: const Color(0xFFFFFFFF), fontWeight: FontWeight.bold), // textColor
-  displaySmall: GoogleFonts.nunito(fontSize: 20, color: const Color(0xFFFFFFFF), fontWeight: FontWeight.bold), // textColor
-  bodyLarge: GoogleFonts.nunito(fontSize: 16, color: const Color(0xFFFFFFFF)), // textColor
-  bodyMedium: GoogleFonts.nunito(fontSize: 14, color: const Color(0xFFFFFFFF)), // textColor
-  titleMedium: GoogleFonts.nunito(
+  headlineSmall: GoogleFonts.nunitoSans(
+    fontSize: 18,
+    color: const Color(0xFFFFFFFF),
+  ),
+  displayLarge: GoogleFonts.nunitoSans(fontSize: 32, color: const Color(0xFFFFFFFF), fontWeight: FontWeight.bold), // textColor
+  displayMedium: GoogleFonts.nunitoSans(fontSize: 24, color: const Color(0xFFFFFFFF), fontWeight: FontWeight.bold), // textColor
+  displaySmall: GoogleFonts.nunitoSans(fontSize: 20, color: const Color(0xFFFFFFFF), fontWeight: FontWeight.bold), // textColor
+  bodyLarge: GoogleFonts.nunitoSans(fontSize: 16, color: const Color(0xFFFFFFFF)), // textColor
+  bodyMedium: GoogleFonts.nunitoSans(fontSize: 14, color: const Color(0xFFFFFFFF)), // textColor
+  titleMedium: GoogleFonts.nunitoSans(
     fontSize: 18,
     color: const Color(0xFFFFFFFF), // textColor
   ),
-  titleSmall: GoogleFonts.nunito(
+
+  titleSmall: GoogleFonts.nunitoSans(
     fontSize: 16,
     color: const Color(0xFFFFFFFF), // textColor
   ),

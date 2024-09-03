@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -43,9 +45,9 @@ class _Profile_ScreenState extends ConsumerState<Profile_Screen> {
     final userInfo = ref.read(userBasicProvider);
     _nameController.text = userInfo.name;
     _ageController.text = userInfo.age.toString();
-    _emailController.text = userInfo.email ?? '-';
-    _phoneController.text = userInfo.phoneNo ?? '-';
-    _addressController.text = userInfo.address ?? '-';
+    _emailController.text = userInfo.email ?? '';
+    _phoneController.text = userInfo.phoneNo ?? '';
+    _addressController.text = userInfo.address ?? '';
   }
 
   @override
@@ -83,10 +85,10 @@ class _Profile_ScreenState extends ConsumerState<Profile_Screen> {
         child: ListView(
           children: [
             Padding(
-              padding: const EdgeInsets.only(left: 10.0),
+              padding: const EdgeInsets.all(10.0),
               child: Text(
-                "Update Account",
-                style: GoogleFonts.exo(fontWeight: FontWeight.w800, fontSize: 40),
+                "Profile",
+                style: GoogleFonts.nunitoSans(fontWeight: FontWeight.w800, fontSize: 40),
               ),
             ),
             const SizedBox(height: 5),
@@ -94,7 +96,7 @@ class _Profile_ScreenState extends ConsumerState<Profile_Screen> {
               padding: const EdgeInsets.only(left: 14.0),
               child: Text(
                 "Update your details!",
-                style: GoogleFonts.exo(fontWeight: FontWeight.w400, fontSize: 20),
+                style: GoogleFonts.nunitoSans(fontWeight: FontWeight.w400, fontSize: 20),
               ),
             ),
             const SizedBox(height: 50),
@@ -150,6 +152,7 @@ class _Profile_ScreenState extends ConsumerState<Profile_Screen> {
               onPressed: _handleSubmit,
               child: Text("Update", style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Theme.of(context).colorScheme.surface)),
             ),
+            const SizedBox(height: 10),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: Theme.of(context).colorScheme.primary,

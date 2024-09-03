@@ -206,21 +206,23 @@ class TaxCalculationNotifier extends StateNotifier<UserTaxCalculation> {
     double net_payable_old = calculateOldTax(taxable_income_old, basicInfo.age) - tax_paid_already;
     net_payable_old = net_payable_old > 0 ? net_payable_old : 0;
 
+    double difference = net_payable_old - net_payable_new;
+
     state = UserTaxCalculation(
-      grossIncome: grossIncome,
-      totalDeductionNew: 75000,
-      netTaxPayableNew: net_payable_new,
-      netTaxPayableOld: net_payable_old,
-      standardDeductionOld: 50000,
-      standardDeductionNew: 75000,
-      taxPayableNew: calculateNewTax(taxable_income_new, basicInfo.age),
-      taxPayableOld: calculateOldTax(taxable_income_old, basicInfo.age),
-      taxableIncomeNew: taxable_income_new,
-      taxableIncomeOld: taxable_income_old,
-      taxesAlreadyPaidNew: tax_paid_already,
-      taxesAlreadyPaidOld: tax_paid_already,
-      totalDeductionOld: total_deduction,
-    );
+        grossIncome: grossIncome,
+        totalDeductionNew: 75000,
+        netTaxPayableNew: net_payable_new,
+        netTaxPayableOld: net_payable_old,
+        standardDeductionOld: 50000,
+        standardDeductionNew: 75000,
+        taxPayableNew: calculateNewTax(taxable_income_new, basicInfo.age),
+        taxPayableOld: calculateOldTax(taxable_income_old, basicInfo.age),
+        taxableIncomeNew: taxable_income_new,
+        taxableIncomeOld: taxable_income_old,
+        taxesAlreadyPaidNew: tax_paid_already,
+        taxesAlreadyPaidOld: tax_paid_already,
+        totalDeductionOld: total_deduction,
+        differenceBetween: difference);
 
     final box = await Hive.openBox<UserTaxCalculation>(_boxName);
     await box.put(_key, state);

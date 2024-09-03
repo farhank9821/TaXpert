@@ -17,8 +17,6 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
   @override
   Widget build(BuildContext context) {
     ref.watch(userProvider);
@@ -30,26 +28,51 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     String name = userbasic.name;
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Form(
-          key: _formKey,
-          child: ListView(
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Column(
             children: [
-              Text(name),
-              Text(taxCalculation.grossIncome.toString()),
-              // Displaying the gross income
+              const SizedBox(height: 10),
               const HomeSummary(),
-              const SizedBox(
-                height: 30,
-              ),
-              // Custom tab section
+              const SizedBox(height: 20),
+              if ((taxCalculation.grossIncome ?? 0.0) > 0)
+                Container(
+                  alignment: Alignment.center,
+                  width: MediaQuery.of(context).size.width * 0.5,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.onTertiary,
+                    borderRadius: BorderRadius.circular(20.0),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Theme.of(context).colorScheme.onTertiary.withOpacity(0.8),
+                        spreadRadius: 1,
+                        blurRadius: 2,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      if ((taxCalculation.differenceBetween ?? 0.0) > 0)
+                        CircleAvatar(
+                          backgroundColor: Theme.of(context).colorScheme.onTertiary,
+                          child: Image.asset('assets/profits.png'),
+                        ),
+                      if ((taxCalculation.differenceBetween ?? 0.0) < 0)
+                        CircleAvatar(
+                          backgroundColor: Theme.of(context).colorScheme.onTertiary,
+                          child: Image.asset('assets/loss.png'),
+                        ),
+                      const SizedBox(width: 8.0), // Adjust spacing between avatar and text
+                      Text(taxCalculation.differenceBetween.toString(), style: Theme.of(context).textTheme.displaySmall),
+                    ],
+                  ),
+                ),
+              const SizedBox(height: 20),
               const CustomTabScreen(),
-
-              // Spacer
-              const SizedBox(
-                height: 50,
-              ),
+              const SizedBox(height: 20),
             ],
           ),
         ),

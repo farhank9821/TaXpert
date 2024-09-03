@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:intl/intl.dart';
 import 'package:number_to_words/number_to_words.dart';
 import 'package:tax_xpert/Diff_calcs/utils/chart_display.dart';
 import 'package:tax_xpert/Diff_calcs/utils/condition_column.dart';
+import 'package:tax_xpert/Home_Screen/utils/customTextField.dart';
 import 'package:tax_xpert/utils/number_to_words.dart';
 
 import '../utils/numberFormat.dart';
@@ -16,7 +17,7 @@ class SalaryCalculatorScreen extends StatefulWidget {
 }
 
 class _SalaryCalculatorScreenState extends State<SalaryCalculatorScreen> {
-  final TextEditingController _salaryController = TextEditingController(text: '0');
+  final TextEditingController _salaryController = TextEditingController();
   double _salary = 0;
   double _pf = 0;
   double _incomeTax = 0;
@@ -32,7 +33,16 @@ class _SalaryCalculatorScreenState extends State<SalaryCalculatorScreen> {
     setState(() {
       _salary = double.tryParse(_salaryController.text.replaceAll(',', '')) ?? 0;
 
-      // Adjust salary based on the selected rate
+      if (_salary == 0) {
+        _pf = 0;
+        _incomeTax = 0;
+        _healthandCess = 0;
+        _netPay = 0;
+        _totalTax = 0;
+        taxPerTenSpent = 0;
+        return;
+      }
+
       if (_salaryRate == 'Month') {
         _salary *= 12;
       } else if (_salaryRate == 'Semimonthly') {
@@ -42,13 +52,11 @@ class _SalaryCalculatorScreenState extends State<SalaryCalculatorScreen> {
       } else if (_salaryRate == 'Day') {
         _salary *= 365;
       } else if (_salaryRate == 'Hour') {
-        _salary *= 365 * 8; // Assuming 8 working hours per day
+        _salary *= 365 * 8;
       }
 
-      // Calculate PF (12% of salary)
       _pf = _salary * 0.12;
 
-      // Calculate income tax and health & cess only if salary > 3,00,000
       if (_salary > 300000) {
         _incomeTax = calculateNewTax(_salary);
         _healthandCess = (_incomeTax * 0.04);
@@ -58,10 +66,8 @@ class _SalaryCalculatorScreenState extends State<SalaryCalculatorScreen> {
         standard_deduction = 0;
       }
 
-      // Calculate total tax
       _totalTax = _pf + _incomeTax + _healthandCess - standard_deduction;
 
-      // Calculate tax per 10 spent and net pay
       taxPerTenSpent = (_totalTax / _salary) * 10;
       _netPay = _salary - _totalTax;
     });
@@ -88,12 +94,12 @@ class _SalaryCalculatorScreenState extends State<SalaryCalculatorScreen> {
     return tax;
   }
 
-  final NumberToWordsConverter _converter = NumberToWordsConverter(); // Instantiate the class
-  String _labelText = '';
+  final NumberToWordsConverter _converter = NumberToWordsConverter();
+  String _labelText = 'Salary';
   void _updateLabelText(String value) {
     if (value.isEmpty) {
       setState(() {
-        _labelText = "Salary";
+        _labelText = _labelText;
       });
       return;
     }
@@ -106,70 +112,72 @@ class _SalaryCalculatorScreenState extends State<SalaryCalculatorScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    _salaryController.text;
+  }
+
+  @override
+  void dispose() {
+    _salaryController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Salary Calculator'),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(10.0),
         child: SingleChildScrollView(
           child: Column(
             children: [
-              TextFormField(
-                controller: _salaryController,
-                decoration: InputDecoration(
-                  labelText: _labelText,
-                  hintText: "Enter your Salary",
-                  border: const OutlineInputBorder(),
-                ),
-                keyboardType: TextInputType.number,
-                onChanged: _updateLabelText,
-                inputFormatters: [
-                  NumberInputFormatter(),
-                ],
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a number';
-                  }
-                  return null;
-                },
+              CustomTF(
+                _salaryController,
+                "Salary",
+                (p0) => _updateLabelText(p0),
               ),
               const SizedBox(height: 16.0),
               Container(
+                width: MediaQuery.of(context).size.width * 0.6,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8.0),
-                  border: Border.all(color: Colors.grey),
-                ),
-                child: DropdownButton<String>(
-                  value: _salaryRate,
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      _salaryRate = newValue!;
-                    });
-                  },
-                  items: <String>['Annual', 'Month', 'Semimonthly', 'Weekly', 'Day', 'Hour'].map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
+                    borderRadius: BorderRadius.circular(8.0),
+                    border: Border.all(color: Colors.grey),
+                    color: Theme.of(context).colorScheme.onTertiary),
+                child: Center(
+                  child: DropdownButton<String>(
+                    padding: const EdgeInsets.all(4.0),
+                    alignment: Alignment.bottomCenter,
+                    value: _salaryRate,
+                    autofocus: true,
+                    dropdownColor: Theme.of(context).colorScheme.onTertiary,
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        _salaryRate = newValue!;
+                      });
+                    },
+                    items: <String>['Annual', 'Month', 'Semimonthly', 'Weekly', 'Day', 'Hour'].map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                  ),
                 ),
               ),
               const SizedBox(height: 20.0),
               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  maximumSize: Size(MediaQuery.of(context).size.width * 0.8, 60),
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                  padding: const EdgeInsets.all(8.0),
+                ),
                 onPressed: _calculate,
-                child: const Text('Calculate'),
+                child: Text("Calculate", style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Theme.of(context).colorScheme.surface)),
               ),
               const SizedBox(height: 20.0),
-              // Text('Salary: ₹${NumberFormat('#,##,##0').format(_salary)}'),
-              // Text('Provident Fund (PF): ₹${NumberFormat('#,##,##0').format(_pf)}'),
-              // Text('Income Tax : ₹${NumberFormat('#,##,##0').format(_incomeTax)}'),
-              // Text('Health and Cess: ₹${NumberFormat('#,##,##0').format(_healthandCess)}'),
-              // Text('Total Tax: ₹${NumberFormat('#,##,##0').format(_totalTax)}'),
-              // Text('Standard Deduction: ₹${NumberFormat('#,##,##0').format(standart_deduction)}'),
-              // Text('Net Pay: ₹${NumberFormat('#,##,##0').format(_netPay)}'),
-
               ConditionColumn(
                 name: 'Salary',
                 value: _salary,
@@ -181,27 +189,21 @@ class _SalaryCalculatorScreenState extends State<SalaryCalculatorScreen> {
                 value: _pf,
                 check_Condition: _netPay > 0,
                 modifier: '- ',
-                isHighlighted: false,
+                isHighlighted: true,
               ),
               ConditionColumn(
                 name: 'Income Tax',
                 value: _incomeTax,
                 check_Condition: _netPay > 0,
                 modifier: '- ',
-                isHighlighted: false,
+                isHighlighted: true,
               ),
               ConditionColumn(
                 name: 'Health and Cess',
                 value: _healthandCess,
                 check_Condition: _netPay > 0,
                 modifier: '- ',
-                isHighlighted: false,
-              ),
-              ConditionColumn(
-                name: 'Total Tax',
-                value: _totalTax,
-                check_Condition: _netPay > 0,
-                isHighlighted: false,
+                isHighlighted: true,
               ),
               GestureDetector(
                 onDoubleTap: () => _showStandardDeductionDialog,
@@ -210,8 +212,14 @@ class _SalaryCalculatorScreenState extends State<SalaryCalculatorScreen> {
                   value: standard_deduction,
                   check_Condition: _netPay > 0,
                   modifier: '- ',
-                  isHighlighted: false,
+                  isHighlighted: true,
                 ),
+              ),
+              ConditionColumn(
+                name: 'Total Tax',
+                value: _totalTax,
+                check_Condition: _netPay > 0,
+                isHighlighted: false,
               ),
               ConditionColumn(
                 name: 'Net Pay',
@@ -220,21 +228,66 @@ class _SalaryCalculatorScreenState extends State<SalaryCalculatorScreen> {
                 modifier: '* ',
                 isHighlighted: false,
               ),
-
+              const SizedBox(
+                height: 10,
+              ),
               if (_netPay > 0)
-                TaxBreakdownChart(
-                  netPayPercentage: (_netPay / (_netPay + _totalTax)) * 100,
-                  totalTaxPercentage: (_totalTax / (_netPay + _totalTax)) * 100,
+                Container(
+                  decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.only(
+                        topRight: Radius.circular(20.0),
+                        bottomLeft: Radius.circular(20.0),
+                      ),
+                      color: Theme.of(context).colorScheme.onTertiary,
+                      shape: BoxShape.rectangle),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: TaxBreakdownChart(
+                            netPayPercentage: (_netPay / (_netPay + _totalTax)) * 100,
+                            totalTaxPercentage: (_totalTax / (_netPay + _totalTax)) * 100,
+                          ),
+                        ),
+                        Text(
+                          'In other words, every time you spend ₹10 of your hard-earned money, ₹${taxPerTenSpent.toStringAsFixed(2)} goes to the government.',
+                          style: Theme.of(context).textTheme.titleSmall,
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               if (_netPay > 0)
-                Text(
-                  'In other words, every time you spend ₹10 of your hard-earned money, ₹${taxPerTenSpent.toStringAsFixed(2)} goes to the government.',
-                  style: TextStyle(fontSize: 16),
+                const SizedBox(
+                  height: 20,
                 ),
-              if (_netPay > 0) Text('Summary'),
               if (_netPay > 0)
-                Text(
-                    'If you make ₹${_salary.toStringAsFixed(2)}  a year living in India, you will be taxed ₹${_totalTax.toStringAsFixed(2)}. That means that your net pay will be ₹${_netPay.toStringAsFixed(2)} per year, or ₹${(_netPay / 12).toStringAsFixed(2)} per month. Your average tax rate is 22.3% and your marginal')
+                Container(
+                  decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.only(
+                        topRight: Radius.circular(20.0),
+                        bottomLeft: Radius.circular(20.0),
+                      ),
+                      color: Theme.of(context).colorScheme.onTertiary,
+                      shape: BoxShape.rectangle),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                    child: Column(
+                      children: [
+                        Text(
+                          'Summary',
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                        Text(
+                          'If you make ₹${_salary.toStringAsFixed(2)}  a year living in India, you will be taxed ₹${_totalTax.toStringAsFixed(2)}. That means that your net pay will be ₹${_netPay.toStringAsFixed(2)} per year, or ₹${(_netPay / 12).toStringAsFixed(2)} per month. Your average tax rate is 22.3% and your marginal',
+                          style: Theme.of(context).textTheme.titleSmall,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
             ],
           ),
         ),

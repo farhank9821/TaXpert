@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:tax_xpert/Home_Screen/utils/customTextField.dart';
 import 'package:tax_xpert/Repo/UserCalculationRepo.dart';
 import 'package:tax_xpert/Repo/userModelRepo.dart';
 import 'package:tax_xpert/model/user_model.dart';
@@ -15,10 +15,6 @@ class CustomTabScreen extends ConsumerStatefulWidget {
 }
 
 class _CustomTabScreenState extends ConsumerState<CustomTabScreen> with SingleTickerProviderStateMixin {
-  // TODO:
-  final GlobalKey<FormState> _incomeFormKey = GlobalKey<FormState>();
-  final GlobalKey<FormState> _80CFormKey = GlobalKey<FormState>();
-  final GlobalKey<FormState> _80DFormKey = GlobalKey<FormState>();
   final TextEditingController _salaryIncomeController = TextEditingController();
   final TextEditingController _incomeFromInterestController = TextEditingController();
   final TextEditingController _rentalIncomeController = TextEditingController();
@@ -94,8 +90,6 @@ class _CustomTabScreenState extends ConsumerState<CustomTabScreen> with SingleTi
     _self_assement_Controller.text = formatDoubleToCurrency(val.self_assessment_tax ?? 0.0);
   }
 
-  final NumberToWordsConverter _converter = NumberToWordsConverter(); // Instantiate the class
-
   @override
   void dispose() {
     // Dispose controllers to prevent memory leaks
@@ -151,7 +145,7 @@ class _CustomTabScreenState extends ConsumerState<CustomTabScreen> with SingleTi
         const SizedBox(
           height: 10,
         ),
-        _buildSettingsSection(context),
+        taxAlreadyPaid(context),
         const SizedBox(
           height: 10,
         ),
@@ -163,30 +157,32 @@ class _CustomTabScreenState extends ConsumerState<CustomTabScreen> with SingleTi
 
   Widget _buildIncomeSection(BuildContext context) {
     return ExpansionTile(
-        backgroundColor: Theme.of(context).colorScheme.onTertiary,
+        collapsedBackgroundColor: Theme.of(context).colorScheme.onTertiary,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         collapsedShape: const ContinuousRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
         shape: const ContinuousRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
         title: Text('Basic Salary', style: Theme.of(context).textTheme.headlineSmall),
         children: [
-          _buildTextField(_salaryIncomeController, "Gross Income From Salary",
+          CustomTF(_salaryIncomeController, "Gross Income From Salary",
               (value) => ref.read(userProvider.notifier).updateUser(salary: double.tryParse(value))),
-          _buildTextField(
+          CustomTF(
             _incomeFromInterestController,
             "Income From Interest",
             (value) => ref.read(userProvider.notifier).updateUser(
                   incomeFromInterest: double.tryParse(value),
                 ),
           ),
-          _buildTextField(_rentalIncomeController, "Rental Income Received",
+          CustomTF(_rentalIncomeController, "Rental Income Received",
               (value) => ref.read(userProvider.notifier).updateUser(rentalIncome: double.tryParse(value))),
-          _buildTextField(_incomeFromOtherSourcesController, "Income From Other Sources",
+          CustomTF(_incomeFromOtherSourcesController, "Income From Other Sources",
               (value) => ref.read(userProvider.notifier).updateUser(incomeFromOtherSources: double.tryParse(value))),
         ]);
   }
 
   Widget _build80CSection(BuildContext context) {
     return ExpansionTile(
-      backgroundColor: Theme.of(context).colorScheme.onTertiary,
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      collapsedBackgroundColor: Theme.of(context).colorScheme.onTertiary,
       collapsedShape: const ContinuousRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
       shape: const ContinuousRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
       title: Text('80-C', style: Theme.of(context).textTheme.headlineSmall),
@@ -249,10 +245,14 @@ class _CustomTabScreenState extends ConsumerState<CustomTabScreen> with SingleTi
 
   Widget _build80DSection(BuildContext context) {
     return ExpansionTile(
-      backgroundColor: Theme.of(context).colorScheme.onTertiary,
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      collapsedBackgroundColor: Theme.of(context).colorScheme.onTertiary,
       collapsedShape: const ContinuousRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
       shape: const ContinuousRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
-      title: Text('80-D', style: Theme.of(context).textTheme.headlineSmall),
+      title: Text(
+        '80-D',
+        style: Theme.of(context).textTheme.headlineSmall ?? const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+      ),
       children: [
         _buildSection(
           context,
@@ -365,9 +365,10 @@ class _CustomTabScreenState extends ConsumerState<CustomTabScreen> with SingleTi
     );
   }
 
-  Widget _buildSettingsSection(BuildContext context) {
+  Widget taxAlreadyPaid(BuildContext context) {
     return ExpansionTile(
-      backgroundColor: Theme.of(context).colorScheme.onTertiary,
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      collapsedBackgroundColor: Theme.of(context).colorScheme.onTertiary,
       collapsedShape: const ContinuousRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
       shape: const ContinuousRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
       title: Text("Tax Paid", style: Theme.of(context).textTheme.headlineSmall),
@@ -403,54 +404,6 @@ class _CustomTabScreenState extends ConsumerState<CustomTabScreen> with SingleTi
           ],
         ),
       ],
-    );
-  }
-
-  Widget _buildTextField(TextEditingController controller, String label, Function(String) onChange) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: TextFormField(
-        controller: controller,
-        onChanged: (value) {
-          // Remove commas and convert empty string to '0'
-          String parsedValue = value.replaceAll(',', '');
-          parsedValue = parsedValue.isEmpty ? '0' : parsedValue;
-
-          // Update the controller with formatted value
-          double? numericValue = double.tryParse(parsedValue);
-          if (numericValue != null) {
-            String formattedValue = NumberFormat('#,##,##0').format(numericValue);
-            controller.value = TextEditingValue(
-              text: formattedValue,
-              selection: TextSelection.collapsed(offset: formattedValue.length),
-            );
-          }
-          int val = int.parse(controller.text.replaceAll(',', ''));
-
-          setState(() {
-            label = _converter.numberToWords(val); // Use the class method
-          });
-          onChange(parsedValue);
-
-          // Recalculate tax
-          ref.read(taxCalculationProvider.notifier).calculateTax(ref.read(userProvider), ref);
-        },
-        decoration: InputDecoration(
-          labelText: label,
-          border: const OutlineInputBorder(),
-        ),
-        keyboardType: TextInputType.number,
-        inputFormatters: [
-          FilteringTextInputFormatter.allow(RegExp(r'[0-9,]')),
-          LengthLimitingTextInputFormatter(10),
-        ],
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return 'Please enter a number';
-          }
-          return null;
-        },
-      ),
     );
   }
 
@@ -495,7 +448,7 @@ class _CustomTabScreenState extends ConsumerState<CustomTabScreen> with SingleTi
       ),
       children: List.generate(
         labels.length,
-        (index) => _buildTextField(
+        (index) => CustomTF(
           controllers[index],
           labels[index],
           onChangeFunctions[index],

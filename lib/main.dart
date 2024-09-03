@@ -4,7 +4,7 @@ import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:tax_xpert/Home_Screen/home.dart';
 import 'package:tax_xpert/Login_screen/loginScreen.dart';
-import 'package:tax_xpert/form_fill/entryField.dart';
+import 'package:tax_xpert/MainSection/navigationbarScreen.dart';
 import 'package:tax_xpert/model/userCalculationModel.dart';
 import 'package:tax_xpert/model/user_basic_info.dart';
 import 'package:tax_xpert/model/user_model.dart';
@@ -31,17 +31,16 @@ class MyApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(routerProvider);
 
-    return MaterialApp(
+    return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       title: 'Tax Xpert',
       theme: ThemeData(
         textTheme: myTextTheme,
         colorScheme: myColorScheme,
       ),
-      home: HomeScreen(),
-      // routerDelegate: router.routerDelegate,
-      // routeInformationParser: router.routeInformationParser,
-      // routeInformationProvider: router.routeInformationProvider,
+      routerDelegate: router.routerDelegate,
+      routeInformationParser: router.routeInformationParser,
+      routeInformationProvider: router.routeInformationProvider,
     );
   }
 }

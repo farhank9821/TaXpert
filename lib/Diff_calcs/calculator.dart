@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tax_xpert/Diff_calcs/emi_calculator.dart';
 import 'package:tax_xpert/Diff_calcs/bill_split.dart';
-import 'package:tax_xpert/Diff_calcs/income_tax_calculator.dart';
+import 'package:tax_xpert/Diff_calcs/salary_breakDown.dart';
 import 'package:tax_xpert/Diff_calcs/utils/logoName.dart';
 
 class CalculatorScreen extends StatelessWidget {
@@ -17,7 +17,7 @@ class CalculatorScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               LogoNameContainer(
-                image: const AssetImage("assets/home_loan.png"),
+                image: const AssetImage("assets/salary_b.png"),
                 name: "Salary BreakDown",
                 onPressed: () {
                   Navigator.push(
@@ -27,7 +27,7 @@ class CalculatorScreen extends StatelessWidget {
                 },
               ),
               LogoNameContainer(
-                image: const AssetImage("assets/home_loan.png"),
+                image: const AssetImage("assets/receipt.png"),
                 name: "Bill Splitter",
                 onPressed: () {
                   Navigator.push(
@@ -38,7 +38,7 @@ class CalculatorScreen extends StatelessWidget {
               ),
               LogoNameContainer(
                 image: const AssetImage("assets/home_loan.png"),
-                name: "Loan Splitter",
+                name: "Loan Emi Calculator",
                 onPressed: () {
                   Navigator.push(
                     context,

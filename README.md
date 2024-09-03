@@ -1,6 +1,3 @@
-Certainly! Here's an updated README template with sections for adding a video, screenshots, usage, and installation instructions.
-
----
 
 <h1 align="center" id="title">TaxXpert - Tax Education and Calculator App</h1>
 
@@ -53,7 +50,7 @@ To get started with the project, follow these steps:
 
 1. **Clone the repository:**
     ```bash
-    git clone https://github.com/your_username/TaxXpert.git
+    git clone https://github.com/KalpeshJangir23/TaXpert.git
     ```
 2. **Navigate to the project directory:**
     ```bash

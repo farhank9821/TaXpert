@@ -38,6 +38,12 @@ Technologies used in the project:
 
 <h2>🎥 Demo Video</h2>
 
+
+
+https://github.com/user-attachments/assets/5d1359ac-69ad-41a6-bea1-4593ba9b4ac6
+
+
+
 <p align="center">
 https://github.com/user-attachments/assets/42b90097-2f55-4778-9fd9-4db2d5a3a366</p>
 

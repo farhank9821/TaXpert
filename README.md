@@ -78,6 +78,35 @@ To get started with the project, follow these steps:
 
 <h2>🤝 Contributing</h2>
 
+<h2>📚 Following</h2>
+Table summarizing the different sections under which deductions are available for various payments and contributions:
+
+| Section | Deduction Towards | Deduction Limit |
+| --- | --- | --- |
+| 80C | Life Insurance Premium, Provident Fund, Tuition Fees, etc. | ₹ 1,50,000 |
+| 80CCC | Annuity plan of LIC or other insurer | ₹ - |
+| 80CCD(1) | Pension Scheme of Central Government | ₹ 1,50,000 |
+| 80CCD(1B) | Pension Scheme of Central Government (additional) | ₹ 50,000 |
+| 80CCD(2) | Employer contribution to Pension Scheme | 10% or 14% of salary |
+| 80CCH | Contribution to Agnipath Scheme | - |
+| 80D | Health Insurance Premium | ₹ 25,000 (₹ 50,000 for Senior Citizens) |
+|  | Preventive Health Check-up | Included in above limits |
+| 80DDB | Medical treatment of specified diseases | ₹ 40,000 (₹ 1,00,000 for Senior Citizens) |
+| 80E | Interest on loan for higher education | Total amount paid |
+| 80EE | Interest on loan for residential house (FY 2016-17) | ₹ 50,000 |
+| 80EEA | Interest on loan for first-time home buyers (FY 2019-22) | ₹ 1,50,000 |
+| 80EEB | Interest on loan for Electric Vehicle (FY 2019-23) | ₹ 1,50,000 |
+| 80G | Donations to prescribed Funds, Charitable Institutions | 100% or 50% deduction |
+| 80GG | Rent paid (where HRA is not part of salary) | Least of specified limits |
+| 80GGA | Donations for Scientific Research or Rural Development | 100% or 50% deduction |
+| 80GGC | Donations to Political Party or Electoral Trust | - |
+| 80TTA | Interest on savings account (Non-Senior Citizens) | ₹ 10,000 |
+| 80TTB | Interest on deposits (Senior Citizens) | ₹ 50,000 |
+| 80U | Taxpayer with Disability | ₹ 75,000 (₹ 1,25,000 for Severe Disability) |
+
+This table provides a concise overview of each section, what payments or contributions qualify for deductions, and the respective deduction limits applicable under the Income Tax Act.
+
+
 Contributions are welcome! Please fork the repository and submit a pull request with your enhancements.
 
 
